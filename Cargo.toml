@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "library",
+    "term",
+    "html",
+]

@@ -1,0 +1,21 @@
+[package]
+name = "rustup-available-packages"
+version = "0.1.0"
+authors = ["mexus <gilaldpellaeon@gmail.com>"]
+description = "Rustup tools state info"
+license = "MIT/Apache-2.0"
+keywords = ["rustup"]
+repository = "https://gitlab.com/mexus/rustup-components-availability"
+documentation = "https://docs.rs/rustup-available-packages/"
+readme = "README.md"
+
+[dependencies]
+chrono = { version = "0.4.6", features = [ "serde" ] }
+derive_more = "0.11"
+either = "1.5.0"
+failure = "0.1.2"
+log = "0.4.5"
+reqwest = "0.8.8"
+serde = "1"
+serde_derive = "1"
+toml = "0.4"

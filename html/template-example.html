@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Rustup packages availability on {{ current_target }}</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"
+        >
+        <style>
+            a.acell {display: block; width: 100%;}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="text-center">{{ current_target }}</h2>
+            <p>&nbsp;</p>
+            <table class="table table-hover table-bordered table-responsive-lg table-sm">
+                <thead>
+                    <tr>
+                    {{#each title as |t|}}
+                        <th scope="col" class="text-center">{{t}}</th>
+                    {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each packages_availability as |row|}}
+                    <tr>
+                        <th scope="row">{{row.0}}</th>
+                        {{#each row.1 as |status|}}
+                        {{#if status}}
+                        <td class="table-success text-center">present</td>
+                        {{else}}
+                        <td class="table-danger text-center">missing</td>
+                        {{/if}}
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <h2 class="text-center">Other targets</h2>
+            <table class="table table-borderless table-responsive-lg table-sm">
+                <tr>
+                    {{#each additional.tiers_and_targets as |tier_info|}}
+                    <td>
+                        <table class="text-center table table-hover table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="row">{{tier_info.0}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>{{#each tier_info.1 as |target|}}
+                                <tr>
+                                    <td scope="col"
+                                        {{~#if (streq target.0 ../../current_target)}}
+                                        class="table-primary"
+                                    {{/if~}}
+                                    >
+                                        {{~#if target.1~}}
+                                        <a href="{{target.0}}.html" class="acell">{{target.0}}</a>
+                                        {{~else~}}
+                                        {{target.0~}}
+                                        {{/if~}}
+                                    </td>
+                                </tr>{{/each}}
+                            </tbody>
+                        </table>
+                    </td>
+                    {{/each}}
+                </tr>
+            </table>
+            <h3 class="text-center">Unknown tier targets</h3>
+            <ul>
+            {{#each additional.unknown_tier as |target|}}
+            <li><a href="{{target}}.html">{{target}}</a></li>
+            {{/each}}
+            </ul>
+        </div>
+    </body>
+</html>
