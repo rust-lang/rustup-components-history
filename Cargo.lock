@@ -878,7 +878,7 @@ dependencies = [
 
 [[package]]
 name = "rustup-available-packages"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "derive_more 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -901,7 +901,7 @@ dependencies = [
  "fern 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "handlebars 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "rustup-available-packages 0.1.0",
+ "rustup-available-packages 0.1.1",
  "serde 1.0.78 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.78 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_yaml 0.8.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -918,7 +918,7 @@ dependencies = [
  "fern 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "prettytable-rs 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "rustup-available-packages 0.1.0",
+ "rustup-available-packages 0.1.1",
  "structopt 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
