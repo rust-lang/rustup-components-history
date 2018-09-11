@@ -10,13 +10,26 @@
             crossorigin="anonymous"
         >
         <style>
-            a.acell {display: block; width: 100%;}
+            .tier-box {
+                border: 1px solid #dbdbdb;
+                height: 400px;
+                margin: 0 0 10px 0;
+                overflow-y: auto;
+                padding: 5px 0;
+            }
+            .tier-box a, .tier-box span {
+                display: block;
+                width: 100%;
+                padding: 0 10px;
+            }
+            .bg-primary a {
+                color: #000000;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center">{{ current_target }}</h2>
-            <p>&nbsp;</p>
+            <h1 class="text-center">{{ current_target }}</h1>
             <table class="table table-hover table-bordered table-responsive-lg table-sm">
                 <thead>
                     <tr>
@@ -41,42 +54,38 @@
                 </tbody>
             </table>
             <h2 class="text-center">Other targets</h2>
-            <table class="table table-borderless table-responsive-lg table-sm">
-                <tr>
-                    {{#each additional.tiers_and_targets as |tier_info|}}
-                    <td>
-                        <table class="text-center table table-hover table-bordered table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="row">{{tier_info.0}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>{{#each tier_info.1 as |target|}}
-                                <tr>
-                                    <td scope="col"
-                                        {{~#if (streq target.0 ../../current_target)}}
-                                        class="table-primary"
-                                    {{/if~}}
-                                    >
-                                        {{~#if target.1~}}
-                                        <a href="{{target.0}}.html" class="acell">{{target.0}}</a>
-                                        {{~else~}}
-                                        {{target.0~}}
-                                        {{/if~}}
-                                    </td>
-                                </tr>{{/each}}
-                            </tbody>
-                        </table>
-                    </td>
-                    {{/each}}
-                </tr>
-            </table>
-            <h3 class="text-center">Unknown tier targets</h3>
-            <ul>
-            {{#each additional.unknown_tier as |target|}}
-            <li><a href="{{target}}.html">{{target}}</a></li>
-            {{/each}}
-            </ul>
+            <div class="container">
+                <div class="row">
+                {{#each additional.tiers_and_targets as |tier_info|}}
+                    <div class="col">
+                        <h3 class="text-center">{{tier_info.0}}</h3>
+                        <div class="tier-box">
+                        {{#each tier_info.1 as |target|}}
+                            <div{{~#if (streq target.0 ../../current_target)}} class="bg-primary"{{/if~}}>
+                                {{~#if target.1~}}
+                                    <a href="{{target.0}}.html">{{target.0}}</a>
+                                {{~else~}}
+                                    <span>{{target.0~}}</span>
+                                {{/if~}}
+                            </div>
+                        {{/each}}
+                        </div>
+                    </div>
+                {{/each}}
+                </div>
+            </div>
+            <h2 class="text-center">Unknown tier targets</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="tier-box">
+                            {{#each additional.unknown_tier as |target|}}
+                                <div><a href="{{target}}.html">{{target}}</a></div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
