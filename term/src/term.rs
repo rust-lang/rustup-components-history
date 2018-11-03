@@ -1,6 +1,6 @@
 //! Printing data to a terminal.
 
-use prettytable::{cell::Cell, color, row::Row, Attr::ForegroundColor, Table as PrettyTable};
+use prettytable::{Cell, color, Row, Attr::ForegroundColor, Table as PrettyTable};
 use rustup_available_packages::table::Table as DataTable;
 use std::iter;
 
