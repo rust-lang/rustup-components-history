@@ -104,7 +104,8 @@ available = true
                                 "arm-unknown-linux-gnueabihf".to_string(),
                                 PackageInfo { available: false },
                             ),
-                        ].into_iter()
+                        ]
+                        .into_iter()
                         .collect(),
                     },
                 ),
@@ -124,11 +125,13 @@ available = true
                                 "x86_64-unknown-linux-gnu".to_string(),
                                 PackageInfo { available: true },
                             ),
-                        ].into_iter()
+                        ]
+                        .into_iter()
                         .collect(),
                     },
                 ),
-            ].into_iter()
+            ]
+            .into_iter()
             .collect(),
         };
         assert_eq!(reference_manifest, parsed_manifest);
@@ -154,7 +157,8 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
                         .into_iter()
                         .collect(),
                 },
-            )].into_iter()
+            )]
+            .into_iter()
             .collect(),
         };
         assert_eq!(reference_manifest, parsed_manifest);

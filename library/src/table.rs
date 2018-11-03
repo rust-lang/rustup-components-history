@@ -162,7 +162,8 @@ impl<'a, Additional> Table<'a, Additional> {
                 dates
                     .clone()
                     .map(|date| date.borrow().format(date_fmt).to_string()),
-            ).collect();
+            )
+            .collect();
         let packages = sort(data.get_available_packages());
         let availability = packages
             .into_iter()

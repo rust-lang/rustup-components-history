@@ -55,9 +55,11 @@ impl<'a> TiersTable<'a> {
                     .map(|target| {
                         let contains = targets.contains(&target as &str);
                         (target, contains)
-                    }).collect();
+                    })
+                    .collect();
                 (tier, tier_targets)
-            }).collect();
+            })
+            .collect();
         v.sort_unstable();
         TiersTable {
             tiers_and_targets: v,

@@ -48,19 +48,11 @@ use std::io;
 #[derive(Debug, From, Fail)]
 pub enum Error {
     /// TOML parsing error.
-    #[fail(
-        display = "TOML deserialization error {} on manifest {}",
-        _0,
-        _1
-    )]
+    #[fail(display = "TOML deserialization error {} on manifest {}", _0, _1)]
     TomlDe(#[cause] toml::de::Error, String),
 
     /// TOML serialization error.
-    #[fail(
-        display = "TOML serialization error {} on manifest {}",
-        _0,
-        _1
-    )]
+    #[fail(display = "TOML serialization error {} on manifest {}", _0, _1)]
     TomlSer(#[cause] toml::ser::Error, String),
 
     /// Error in the `reqwest` library.

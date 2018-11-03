@@ -38,10 +38,7 @@ use tiers_table::TiersTable;
 #[derive(StructOpt)]
 #[structopt(about = "Rust tools per-release availability monitor")]
 enum CmdOpts {
-    #[structopt(
-        name = "render",
-        about = "Renders pages using provided configuration"
-    )]
+    #[structopt(name = "render", about = "Renders pages using provided configuration")]
     Render(ConfigOpt),
     #[structopt(
         name = "print_config",
@@ -56,7 +53,7 @@ struct ConfigOpt {
         short = "c",
         long = "config",
         help = "Path to a configuration file",
-        parse(from_os_str),
+        parse(from_os_str)
     )]
     config_path: PathBuf,
 }
@@ -75,7 +72,8 @@ fn setup_logger(verbosity: log::LevelFilter) -> Result<(), fern::InitError> {
                 record.level(),
                 message
             ))
-        }).level(verbosity)
+        })
+        .level(verbosity)
         .chain(io::stderr())
         .apply()?;
     Ok(())

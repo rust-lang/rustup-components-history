@@ -30,7 +30,7 @@ struct Config {
         short = "c",
         long = "channel",
         help = "Override default release channel",
-        default_value = "nightly",
+        default_value = "nightly"
     )]
     channel: String,
 
@@ -57,11 +57,7 @@ struct Config {
     )]
     verbosity: usize,
 
-    #[structopt(
-        long = "cache",
-        help = "Path to a cache directory",
-        parse(from_os_str)
-    )]
+    #[structopt(long = "cache", help = "Path to a cache directory", parse(from_os_str))]
     cache: Option<PathBuf>,
 }
 
@@ -101,7 +97,8 @@ fn setup_logger(verbosity: usize) -> Result<(), fern::InitError> {
                 record.level(),
                 message
             ))
-        }).level(verbosity)
+        })
+        .level(verbosity)
         .chain(io::stderr())
         .apply()?;
     Ok(())
