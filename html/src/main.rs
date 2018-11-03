@@ -110,7 +110,9 @@ fn main() -> Result<(), failure::Error> {
     } else {
         Either::Right(NoopCache {})
     };
-    let downloader = Downloader::with_default_source(&config.channel).set_cache(cache);
+    let downloader = Downloader::with_default_source(&config.channel)
+        .set_cache(cache)
+        .skip_missing_days(7);
     let manifests = downloader.get_last_manifests(config.days_in_past)?;
     let dates: Vec<_> = manifests.iter().map(|manifest| manifest.date).collect();
     data.add_manifests(manifests);

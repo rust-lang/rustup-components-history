@@ -34,6 +34,7 @@ pub mod availability;
 pub mod cache;
 mod downloader;
 pub mod manifest;
+mod skip_errors;
 mod source;
 pub mod table;
 mod types;

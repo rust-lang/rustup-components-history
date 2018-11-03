@@ -1,3 +1,4 @@
+use super::skip_errors::SkipMissingExt;
 use cache::{Cache, NoopCache};
 use chrono::{Duration, NaiveDate};
 use manifest::Manifest;
@@ -11,6 +12,7 @@ pub struct Downloader<S, C = NoopCache> {
     client: reqwest::Client,
     source: S,
     cache: C,
+    skip_missing_days: usize,
 }
 
 impl<'a> Downloader<DefaultSource<'a>> {
@@ -27,6 +29,7 @@ impl<S> Downloader<S> {
             client: reqwest::Client::new(),
             source,
             cache: NoopCache {},
+            skip_missing_days: 0,
         }
     }
 }
@@ -42,6 +45,21 @@ where
             client: self.client,
             source: self.source,
             cache: c,
+            skip_missing_days: self.skip_missing_days,
+        }
+    }
+
+    /// Set to non zero if you want to silently skip days for which manifest files are missing.
+    /// Not more than `skip` days will be skipped.
+    /// Please not that this setting only affects the [`get_last_manifests`] method.
+    ///
+    /// Off (zero) by default.
+    pub fn skip_missing_days(self, skip: usize) -> Downloader<S, C> {
+        Downloader {
+            client: self.client,
+            source: self.source,
+            cache: self.cache,
+            skip_missing_days: skip,
         }
     }
 
@@ -49,20 +67,18 @@ where
     /// manifest is fetched.
     ///
     /// The returned vector is sorted in descending order of dates.
-    ///
-    /// This call is never cached.
     pub fn get_last_manifests(&self, days: usize) -> Result<Vec<Manifest>, Error> {
         let latest = self.get_latest_manifest()?;
         let latest_day = latest.date;
         info!("Latest manifest is for {}", latest_day);
         let rest = (1..days)
             .filter_map(|day| latest_day.checked_sub_signed(Duration::days(day as i64)))
-            .map(|date| self.get_manifest(date));
+            .map(|date| self.get_manifest(date))
+            .skip_missing(self.skip_missing_days);
         iter::once(Ok(latest)).chain(rest).collect()
     }
 
-    /// Gets manifest for a given date. If the `date` is `None`, the latest available manifest is
-    /// requested.
+    /// Gets manifest for a given date.
     pub fn get_manifest(&self, day: NaiveDate) -> Result<Manifest, Error> {
         if let Some(cached) = self.cache.get(day) {
             return Ok(cached);
@@ -74,11 +90,15 @@ where
 
     /// Gets manifest for a given date. If the `date` is `None`, the latest available manifest is
     /// requested.
+    ///
+    /// This call is never cached.
     pub fn get_latest_manifest(&self) -> Result<Manifest, Error> {
         self.get_manifest_by_url(self.source.make_latest_manifest_url())
     }
 
     /// Fetches a manifest from a given url.
+    ///
+    /// This call is never cached.
     pub fn get_manifest_by_url(&self, url: impl AsRef<str>) -> Result<Manifest, Error> {
         let url = url.as_ref();
         info!("Fetching a manifest from {}", url);
