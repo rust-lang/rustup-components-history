@@ -22,6 +22,7 @@ extern crate serde_yaml;
 mod opts;
 mod tiers_table;
 
+use chrono::Utc;
 use either::Either;
 use failure::ResultExt;
 use handlebars::Handlebars;
@@ -79,6 +80,12 @@ fn setup_logger(verbosity: log::LevelFilter) -> Result<(), fern::InitError> {
     Ok(())
 }
 
+#[derive(Serialize)]
+struct Additional<'a> {
+    tiers: TiersTable<'a>,
+    datetime: String,
+}
+
 fn main() -> Result<(), failure::Error> {
     let cmd_opts = CmdOpts::from_args();
     let config = match cmd_opts {
@@ -120,7 +127,10 @@ fn main() -> Result<(), failure::Error> {
 
     let output_pattern = config.output_pattern;
     let template_path = config.template_path;
-    let tiers = TiersTable::new(config.tiers, &all_targets);
+    let additional = Additional {
+        tiers: TiersTable::new(config.tiers, &all_targets),
+        datetime: Utc::now().format("%d %b %Y, %H:%M:%S UTC").to_string(),
+    };
 
     for target in &all_targets {
         info!("Processing target {}", target);
@@ -133,7 +143,7 @@ fn main() -> Result<(), failure::Error> {
 
         let table = Table::builder(&data, target)
             .dates(&dates)
-            .additional(&tiers)
+            .additional(&additional)
             .build();
 
         info!("Writing target {} to {:?}", target, output_path);

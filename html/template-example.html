@@ -56,7 +56,7 @@
             <h2 class="text-center">Other targets</h2>
             <div class="container">
                 <div class="row">
-                {{#each additional.tiers_and_targets as |tier_info|}}
+                {{#each additional.tiers.tiers_and_targets as |tier_info|}}
                     <div class="col">
                         <h3 class="text-center">{{tier_info.0}}</h3>
                         <div class="tier-box">
@@ -79,12 +79,15 @@
                 <div class="row">
                     <div class="col">
                         <div class="tier-box">
-                            {{#each additional.unknown_tier as |target|}}
+                            {{#each additional.tiers.unknown_tier as |target|}}
                                 <div><a href="{{target}}.html">{{target}}</a></div>
                             {{/each}}
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer text-muted bg-transparent text-center">
+                <p>Generated at {{additional.datetime}}</p>
             </div>
         </div>
     </body>
