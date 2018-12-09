@@ -20,6 +20,16 @@ pub struct Manifest {
     /// A map of available packages and their targets.
     #[serde(rename = "pkg")]
     pub packages: HashMap<String, PackageTargets>,
+    /// A map of package "renames".
+    #[serde(default)]
+    pub renames: HashMap<String, Rename>,
+}
+
+/// Package renaming
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Rename {
+    /// New name of the package.
+    pub to: String,
 }
 
 /// Package info.
@@ -83,6 +93,12 @@ available = false
 
 [pkg.rustfmt-preview.target.x86_64-unknown-linux-gnu]
 available = true
+
+[renames.rls]
+to = "rls-preview"
+
+[renames.rustfmt]
+to = "rustfmt-preview"
 "#;
         let parsed_manifest: Manifest = toml::from_str(data).unwrap();
         let reference_manifest = Manifest {
@@ -133,6 +149,22 @@ available = true
             ]
             .into_iter()
             .collect(),
+            renames: vec![
+                (
+                    "rls".to_string(),
+                    Rename {
+                        to: "rls-preview".to_string(),
+                    },
+                ),
+                (
+                    "rustfmt".to_string(),
+                    Rename {
+                        to: "rustfmt-preview".to_string(),
+                    },
+                ),
+            ]
+            .into_iter()
+            .collect(),
         };
         assert_eq!(reference_manifest, parsed_manifest);
     }
@@ -160,6 +192,7 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
             )]
             .into_iter()
             .collect(),
+            renames: vec![].into_iter().collect(),
         };
         assert_eq!(reference_manifest, parsed_manifest);
     }

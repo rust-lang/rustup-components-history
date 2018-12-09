@@ -19,7 +19,16 @@ pub struct AvailabilityData {
 impl AvailabilityData {
     /// Adds an availability data from a given [`Manifest`].
     pub fn add_manifest(&mut self, manifest: Manifest) {
+        let reverse_renames: HashMap<_, _> = manifest
+            .renames
+            .iter()
+            .map(|(key, value)| (&value.to, key))
+            .collect();
         for (package_name, info) in manifest.packages {
+            let package_name = reverse_renames
+                .get(&package_name)
+                .map(|name| String::clone(name))
+                .unwrap_or(package_name);
             for (target_tripple, target_info) in info.targets {
                 let package_set = self
                     .data
@@ -129,5 +138,21 @@ available = true
             vec![NaiveDate::from_ymd(2018, 9, 3)],
         );
         assert_eq!(vec!(true), package_exists);
+    }
+
+    #[test]
+    fn check_rename() {
+        let data = r#"date = "2018-09-03"
+[pkg.ahaha.target.lol]
+available = true
+[renames.kek]
+to = "ahaha"
+"#;
+        let parsed_manifest: Manifest = toml::from_str(data).unwrap();
+        let mut availability: AvailabilityData = Default::default();
+        availability.add_manifest(parsed_manifest);
+        let all_packages = availability.get_available_packages();
+        assert_eq!(1, all_packages.len());
+        assert!(all_packages.contains("kek"));
     }
 }
