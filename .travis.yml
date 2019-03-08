@@ -5,15 +5,11 @@ cache: cargo
 
 jobs:
   include:
-    - stage: build
-      script: cargo build --verbose --all
-    - stage: test
-      script: cargo test --verbose --all
     - stage: deploy
       script: ./prepare-pages.sh
       deploy:
         provider: script
-        script: curl -LsSf https://git.io/fhJ8n | rustc - && (cd target/doc && ../../rust_out)
+        script: curl -LsSf https://git.io/fhJ8n | rustc - && (cd output && ../rust_out)
         skip_cleanup: true
         on:
           branch: master
