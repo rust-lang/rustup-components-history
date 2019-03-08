@@ -12,7 +12,7 @@ the library, and to the source code of the binary crate for usage hints.
 
 Under the `html` directory you will find a binary crate that's capable of
 producing web-pages like
-[https://mexus.github.io/rustup-components-history/](https://mexus.github.io/rustup-components-history/).
+[https://rust-lang.github.io/rustup-components-history/](https://rust-lang.github.io/rustup-components-history/).
 
 Run the binary with a `--help` flag to see available options.
 
