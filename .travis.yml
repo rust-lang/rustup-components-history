@@ -1,0 +1,22 @@
+language: rust
+rust:
+  - stable
+cache: cargo
+
+jobs:
+  include:
+    - stage: build
+      script: cargo build --verbose --all
+    - stage: test
+      script: cargo test --verbose --all
+    - stage: deploy
+      script: ./prepare-pages.sh
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: $GITHUB_TOKEN
+        keep-history: true
+        local-dir: output
+        target-branch: gh-pages
+        on:
+          branch: master
