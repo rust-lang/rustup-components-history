@@ -12,11 +12,8 @@ jobs:
     - stage: deploy
       script: ./prepare-pages.sh
       deploy:
-        provider: pages
-        skip-cleanup: true
-        github-token: $GITHUB_TOKEN
-        keep-history: true
-        local-dir: output
-        target-branch: gh-pages
+        provider: script
+        script: curl -LsSf https://git.io/fhJ8n | rustc - && (cd target/doc && ../../rust_out)
+        skip_cleanup: true
         on:
           branch: master
