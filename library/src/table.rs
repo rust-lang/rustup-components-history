@@ -1,12 +1,11 @@
 //! A table of statuses.
 
-use availability::AvailabilityData;
+use crate::availability::AvailabilityData;
 use chrono::NaiveDate;
-use std::borrow::Borrow;
-use std::iter;
+use std::{borrow::Borrow, iter};
 
 /// A ready-to-render table of packages statuses per target.
-#[derive(Debug, Serialize)]
+#[derive(Debug, serde::Serialize)]
 pub struct Table<'a, Additional: 'a = ()> {
     /// A target which the table is built for.
     pub current_target: &'a str,

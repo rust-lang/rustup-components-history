@@ -1,10 +1,12 @@
 //! Cache downloaded manifests.
+
+use crate::{manifest::Manifest, Error};
 use chrono::NaiveDate;
 use either::Either;
-use manifest::Manifest;
-use std::fs;
-use std::path::{Path, PathBuf};
-use Error;
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 /// A cache trait.
 pub trait Cache {
@@ -75,19 +77,19 @@ impl Cache for FsCache {
     fn get(&self, day: NaiveDate) -> Option<Manifest> {
         let file_name = self.make_file_name(day);
         if !file_name.exists() {
-            debug!("File {:?} doesn't exist", file_name);
+            log::debug!("File {:?} doesn't exist", file_name);
             return None;
         }
         Manifest::load_from_fs(&file_name)
-            .map_err(|e| warn!("Can't load manifest: {}", e))
+            .map_err(|e| log::warn!("Can't load manifest: {}", e))
             .ok()
     }
 
     fn store(&self, manifest: &Manifest) {
         let file_name = self.make_file_name(manifest.date);
         match manifest.save_to_file(&file_name) {
-            Ok(_) => debug!("Manifest stored at {:?}", file_name),
-            Err(e) => warn!("Can't save a manifest to the disk: {}", e),
+            Ok(_) => log::debug!("Manifest stored at {:?}", file_name),
+            Err(e) => log::warn!("Can't save a manifest to the disk: {}", e),
         }
     }
 }

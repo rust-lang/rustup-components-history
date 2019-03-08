@@ -1,7 +1,8 @@
 [package]
 name = "rustup-available-packages-term"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["mexus <gilaldpellaeon@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 chrono = "0.4.6"

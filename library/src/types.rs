@@ -1,11 +1,9 @@
 //! Types that are used internally.
 
-use std::borrow::Borrow;
-use std::ops::Deref;
-use std::rc::Rc;
+use std::{borrow::Borrow, ops::Deref, rc::Rc};
 
 /// Reference-counted build-target triple.
-#[derive(Debug, Clone, Hash, PartialEq, Display, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, derive_more::Display, Eq)]
 pub struct TargetTripple(Rc<str>);
 
 impl Deref for TargetTripple {

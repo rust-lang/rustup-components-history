@@ -1,11 +1,12 @@
 use super::skip_errors::SkipMissingExt;
-use cache::{Cache, NoopCache};
+use crate::{
+    cache::{Cache, NoopCache},
+    manifest::Manifest,
+    source::{DefaultSource, SourceInfo},
+    Error,
+};
 use chrono::{Duration, NaiveDate};
-use manifest::Manifest;
-use source::{DefaultSource, SourceInfo};
 use std::{io, iter};
-use Error;
-use {reqwest, toml};
 
 /// Manifests downloader and parser.
 pub struct Downloader<S, C = NoopCache> {
@@ -70,7 +71,7 @@ where
     pub fn get_last_manifests(&self, days: usize) -> Result<Vec<Manifest>, Error> {
         let latest = self.get_latest_manifest()?;
         let latest_day = latest.date;
-        info!("Latest manifest is for {}", latest_day);
+        log::info!("Latest manifest is for {}", latest_day);
         let rest = (1..days)
             .filter_map(|day| latest_day.checked_sub_signed(Duration::days(day as i64)))
             .map(|date| self.get_manifest(date))
@@ -101,7 +102,7 @@ where
     /// This call is never cached.
     pub fn get_manifest_by_url(&self, url: impl AsRef<str>) -> Result<Manifest, Error> {
         let url = url.as_ref();
-        info!("Fetching a manifest from {}", url);
+        log::info!("Fetching a manifest from {}", url);
         let mut response = self
             .client
             .get(url)

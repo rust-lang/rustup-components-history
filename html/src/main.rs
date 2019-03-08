@@ -1,37 +1,17 @@
-#[macro_use]
-extern crate failure;
-
-#[macro_use]
-extern crate handlebars;
-
-#[macro_use]
-extern crate log;
-
-#[macro_use]
-extern crate serde_derive;
-
-#[macro_use]
-extern crate structopt;
-
-extern crate chrono;
-extern crate either;
-extern crate fern;
-extern crate rustup_available_packages;
-extern crate serde_yaml;
-
 mod opts;
 mod tiers_table;
 
 use chrono::Utc;
 use either::Either;
-use failure::ResultExt;
-use handlebars::Handlebars;
+use failure::{format_err, ResultExt};
+use handlebars::{handlebars_helper, Handlebars};
 use opts::Config;
 use rustup_available_packages::{
     cache::{FsCache, NoopCache},
     table::Table,
     AvailabilityData, Downloader,
 };
+use serde::Serialize;
 use std::{fs::File, io, path::PathBuf};
 use structopt::StructOpt;
 use tiers_table::TiersTable;
@@ -123,7 +103,7 @@ fn main() -> Result<(), failure::Error> {
     data.add_manifests(manifests);
 
     let all_targets = data.get_available_targets();
-    info!("Available targets: {:?}", all_targets);
+    log::info!("Available targets: {:?}", all_targets);
 
     let output_pattern = config.output_pattern;
     let template_path = config.template_path;
@@ -133,11 +113,11 @@ fn main() -> Result<(), failure::Error> {
     };
 
     for target in &all_targets {
-        info!("Processing target {}", target);
+        log::info!("Processing target {}", target);
         let output_path = handlebars
             .render_template(&output_pattern, &PathRenderData { target })
             .with_context(|_| format!("Invalid output pattern: {}", output_pattern))?;
-        info!("Preparing file {}", output_path);
+        log::info!("Preparing file {}", output_path);
         let out = File::create(&output_path)
             .with_context(|_| format!("Can't create file [{}]", output_path))?;
 
@@ -146,7 +126,7 @@ fn main() -> Result<(), failure::Error> {
             .additional(&additional)
             .build();
 
-        info!("Writing target {} to {:?}", target, output_path);
+        log::info!("Writing target {} to {:?}", target, output_path);
         handlebars
             .render_to_write(TEMPLATE_NAME, &table, out)
             .with_context(|_| format!("Can't render [{:?}] for [{}]", template_path, target))?;

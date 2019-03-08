@@ -13,23 +13,6 @@
 
 #![deny(missing_docs)]
 
-#[macro_use]
-extern crate derive_more;
-
-#[macro_use]
-extern crate log;
-
-#[macro_use]
-extern crate failure;
-
-#[macro_use]
-extern crate serde_derive;
-
-extern crate chrono;
-extern crate either;
-extern crate reqwest;
-extern crate toml;
-
 pub mod availability;
 pub mod cache;
 mod downloader;
@@ -45,7 +28,7 @@ pub use source::{DefaultSource, SourceInfo};
 use std::io;
 
 /// An error that might happen inside the library.
-#[derive(Debug, From, Fail)]
+#[derive(Debug, derive_more::From, failure::Fail)]
 pub enum Error {
     /// TOML parsing error.
     #[fail(display = "TOML deserialization error {} on manifest {}", _0, _1)]

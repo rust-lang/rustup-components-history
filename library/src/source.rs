@@ -7,7 +7,7 @@ pub trait SourceInfo {
     type Url: AsRef<str>;
 
     /// Makes a URL for a manifest for a specified date.
-    fn make_manifest_url(&self, NaiveDate) -> Self::Url;
+    fn make_manifest_url(&self, _: NaiveDate) -> Self::Url;
 
     /// Makes a URL for the latest manifest.
     fn make_latest_manifest_url(&self) -> Self::Url;

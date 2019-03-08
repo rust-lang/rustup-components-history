@@ -3,13 +3,15 @@
 //! Currently only fields required to get an availability status are implemented, but if you need
 //! more please feel free to send a PR.
 
+use crate::Error;
 use chrono::NaiveDate;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{Read, Write};
-use std::path::Path;
-use toml;
-use Error;
+use serde::{Deserialize, Serialize};
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{Read, Write},
+    path::Path,
+};
 
 /// A rustup manifest.
 #[derive(Debug, Serialize, Deserialize, PartialEq)]

@@ -1,16 +1,3 @@
-#[macro_use]
-extern crate failure;
-
-#[macro_use]
-extern crate structopt;
-
-extern crate chrono;
-extern crate either;
-extern crate fern;
-extern crate log;
-extern crate prettytable;
-extern crate rustup_available_packages;
-
 mod term;
 
 use either::Either;
@@ -73,13 +60,13 @@ fn check_target(target: &str, availability: &AvailabilityData) -> Result<(), fai
         eprintln!("Actually, there are no targets available.");
     } else {
         eprintln!("Please use one of the following:");
-        let mut targets: Vec<_> = targets.into_iter().map(|s| s.to_string()).collect();
+        let mut targets: Vec<_> = targets.into_iter().map(str::to_string).collect();
         targets.sort_unstable();
         for target in targets {
             eprintln!("  {}", target);
         }
     }
-    bail!("Unavailable target: {}", target.to_string())
+    failure::bail!("Unavailable target: {}", target.to_string())
 }
 
 fn setup_logger(verbosity: usize) -> Result<(), fern::InitError> {
@@ -112,7 +99,8 @@ fn main() -> Result<(), failure::Error> {
 
     let cache = if let Some(cache_path) = config.cache {
         Either::Left(
-            FsCache::new(cache_path).map_err(|e| format_err!("Can't initialize cache: {}", e))?,
+            FsCache::new(cache_path)
+                .map_err(|e| failure::format_err!("Can't initialize cache: {}", e))?,
         )
     } else {
         Either::Right(NoopCache {})

@@ -1,9 +1,11 @@
 //! Availability evaluation tools.
 
+use crate::manifest::Manifest;
 use chrono::NaiveDate;
-use manifest::Manifest;
-use std::borrow::Borrow;
-use std::collections::{HashMap, HashSet};
+use std::{
+    borrow::Borrow,
+    collections::{HashMap, HashSet},
+};
 
 type PackageName = String;
 type TargetTripple = String;
@@ -96,8 +98,7 @@ impl AvailabilityData {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use manifest::Manifest;
-    use toml;
+    use crate::manifest::Manifest;
 
     #[test]
     fn check() {

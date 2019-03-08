@@ -1,8 +1,10 @@
-use opts::Tier;
-use std::borrow::Cow;
-use std::collections::{HashMap, HashSet};
+use crate::opts::Tier;
+use std::{
+    borrow::Cow,
+    collections::{HashMap, HashSet},
+};
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct TiersTable<'a> {
     /// A list of tier names and their targets.
     tiers_and_targets: Vec<(Tier, Vec<(String, bool)>)>,
@@ -10,7 +12,7 @@ pub struct TiersTable<'a> {
 }
 
 fn inverse_tiers_map(map: &HashMap<Tier, Vec<String>>) -> HashMap<&str, Tier> {
-    map.into_iter()
+    map.iter()
         .flat_map(|(tier, targets)| targets.iter().map(move |target| (target as &str, *tier)))
         .collect()
 }
@@ -20,7 +22,7 @@ fn find_unknown<'a>(
     targets: &HashSet<&'a str>,
 ) -> Vec<Cow<'a, str>> {
     let inversed_tiers = inverse_tiers_map(&tiers);
-    let not_listed = targets.into_iter().filter_map(|&target| {
+    let not_listed = targets.iter().filter_map(|&target| {
         let tier = inversed_tiers
             .get(target)
             .cloned()

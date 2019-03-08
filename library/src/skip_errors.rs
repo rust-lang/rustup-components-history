@@ -1,4 +1,4 @@
-use super::Error;
+use crate::Error;
 
 /// An iterator wrapper to skip missing manifests.
 pub struct SkipMissing<I: IntoIterator> {
@@ -28,7 +28,7 @@ impl<I: IntoIterator<Item = Result<T, Error>>, T> Iterator for SkipMissing<I> {
                 match next {
                     Ok(x) => break Some(Ok(x)),
                     Err(Error::BadResponse(reqwest::StatusCode::NOT_FOUND, url)) => {
-                        warn!("Missing a manifest: {}", url);
+                        log::warn!("Missing a manifest: {}", url);
                         self.to_skip -= 1;
                     }
                     Err(e) => break Some(Err(e)),

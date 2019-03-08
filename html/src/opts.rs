@@ -1,10 +1,11 @@
-use failure;
 use log::LevelFilter;
-use serde_yaml;
-use std::collections::HashMap;
-use std::fmt::Display;
-use std::fs::File;
-use std::path::{Path, PathBuf};
+use serde::{Deserialize, Serialize};
+use std::{
+    collections::HashMap,
+    fmt::Display,
+    fs::File,
+    path::{Path, PathBuf},
+};
 
 /// Support tiers: https://forge.rust-lang.org/platform-support.html.
 #[derive(Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
