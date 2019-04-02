@@ -12,7 +12,11 @@ use rustup_available_packages::{
     AvailabilityData, Downloader,
 };
 use serde::Serialize;
-use std::{fs::File, io, path::PathBuf};
+use std::{
+    fs::{create_dir_all, File},
+    io,
+    path::{Path, PathBuf},
+};
 use structopt::StructOpt;
 use tiers_table::TiersTable;
 
@@ -117,6 +121,10 @@ fn main() -> Result<(), failure::Error> {
         let output_path = handlebars
             .render_template(&output_pattern, &PathRenderData { target })
             .with_context(|_| format!("Invalid output pattern: {}", output_pattern))?;
+        if let Some(parent) = Path::new(&output_path).parent() {
+            create_dir_all(parent)
+                .with_context(|_| format!("Can't create path {}", parent.display()))?;
+        }
         log::info!("Preparing file {}", output_path);
         let out = File::create(&output_path)
             .with_context(|_| format!("Can't create file [{}]", output_path))?;
