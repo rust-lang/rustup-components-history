@@ -102,8 +102,13 @@ fn main() -> Result<(), failure::Error> {
     let downloader = Downloader::with_default_source(&config.channel)
         .set_cache(cache)
         .skip_missing_days(7);
-    let manifests = downloader.get_last_manifests(config.days_in_past)?;
-    let dates: Vec<_> = manifests.iter().map(|manifest| manifest.date).collect();
+    let manifests =
+        downloader.get_last_manifests(config.days_in_past + config.additional_lookup_days)?;
+    let dates: Vec<_> = manifests
+        .iter()
+        .map(|manifest| manifest.date)
+        .take(config.days_in_past)
+        .collect();
     data.add_manifests(manifests);
 
     let all_targets = data.get_available_targets();
