@@ -7,7 +7,10 @@ template_path: template.html
 output_pattern: "output/{{target}}.html"
 
 # For how many days in the past would you like to peek.
-days_in_past: 8
+days_in_past: 7
+
+# For how many additional days should we look into to calculate "the last available" date.
+additional_lookup_days: 22
 
 # A release channel to check.
 # If ommited, the default channel is nightly.

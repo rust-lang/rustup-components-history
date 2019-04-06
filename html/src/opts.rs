@@ -30,11 +30,17 @@ fn default_channel() -> String {
     String::from("nightly")
 }
 
+fn default_additional_days() -> usize {
+    0
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub template_path: PathBuf,
     pub output_pattern: String,
     pub days_in_past: usize,
+    #[serde(default = "default_additional_days")]
+    pub additional_lookup_days: usize,
     #[serde(default = "default_channel")]
     pub channel: String,
     #[serde(default = "default_verbosity")]
@@ -63,7 +69,10 @@ template_path: /path/to/template.html
 output_pattern: "/path/to/output/{{{{target}}}}.html"
 
 # For how many days in the past would you like to peek.
-days_in_past: 8
+days_in_past: 7
+
+# For how many additional days should we look into to calculate "the last available" date.
+additional_lookup_days: {additional_lookup_days}
 
 # A release channel to check.
 # If ommited, the default level is {channel}.
@@ -165,6 +174,7 @@ tiers:
 "#,
             channel = default_channel(),
             verbosity = default_verbosity(),
+            additional_lookup_days = default_additional_days(),
         )
     }
 }
@@ -182,9 +192,10 @@ mod test {
             defaults.template_path.to_str(),
         );
         assert_eq!("/path/to/output/{{target}}.html", defaults.output_pattern,);
-        assert_eq!(8, defaults.days_in_past,);
+        assert_eq!(7, defaults.days_in_past,);
         assert_eq!(default_channel(), defaults.channel,);
         assert_eq!(default_verbosity(), defaults.verbosity,);
+        assert_eq!(default_additional_days(), defaults.additional_lookup_days,);
         assert_eq!(
             Some("/tmp/manifests/"),
             defaults.cache_path.as_ref().and_then(|x| x.to_str()),

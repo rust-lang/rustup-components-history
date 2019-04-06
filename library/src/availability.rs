@@ -25,6 +25,8 @@ pub struct AvailabilityRow<'a> {
     pub package_name: &'a str,
     /// List of "availabilities".
     pub availability_list: Vec<bool>,
+    /// Date when the component has been available for the last time.
+    pub last_available: Option<NaiveDate>,
     /// A hidden field to improve compatibility.
     _hidden: (),
 }
@@ -111,6 +113,7 @@ impl AvailabilityData {
         AvailabilityRow {
             package_name: pkg,
             availability_list,
+            last_available: available_dates.iter().map(|&&date| date).max(),
             _hidden: (),
         }
     }

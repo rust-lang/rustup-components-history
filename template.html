@@ -36,6 +36,7 @@
                     {{#each title as |t|}}
                         <th scope="col" class="text-center">{{t}}</th>
                     {{/each}}
+                        <th scope="col" class="text-center">Last available</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,11 @@
                         <td class="table-danger text-center">missing</td>
                         {{/if}}
                         {{/each}}
+                        {{#if row.last_available}}
+                        <td class="text-center">{{row.last_available}}</td>
+                        {{else}}
+                        <td class="text-center">N/A</td>
+                        {{/if}}
                     </tr>
                     {{/each}}
                 </tbody>
