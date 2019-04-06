@@ -41,8 +41,8 @@
                 <tbody>
                     {{#each packages_availability as |row|}}
                     <tr>
-                        <th scope="row">{{row.0}}</th>
-                        {{#each row.1 as |status|}}
+                        <th scope="row">{{row.package_name}}</th>
+                        {{#each row.availability_list as |status|}}
                         {{#if status}}
                         <td class="table-success text-center">present</td>
                         {{else}}
