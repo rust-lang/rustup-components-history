@@ -1,7 +1,7 @@
 //! Printing data to a terminal.
 
 use prettytable::{color, Attr::ForegroundColor, Cell, Row, Table as PrettyTable};
-use rustup_available_packages::table::Table as DataTable;
+use rustup_available_packages::{availability::AvailabilityRow, table::Table as DataTable};
 use std::iter;
 
 fn cell_from_bool(val: bool) -> Cell {
@@ -13,9 +13,9 @@ fn cell_from_bool(val: bool) -> Cell {
     }
 }
 
-fn row_from_pkgdata(package: &str, data: Vec<bool>) -> Row {
-    let first = Cell::new(package).with_style(ForegroundColor(color::CYAN));
-    let rest = data.into_iter().map(cell_from_bool);
+fn row_from_pkgdata(data: AvailabilityRow) -> Row {
+    let first = Cell::new(data.package_name).with_style(ForegroundColor(color::CYAN));
+    let rest = data.availability_list.into_iter().map(cell_from_bool);
     Row::new(iter::once(first).chain(rest).collect())
 }
 
@@ -25,7 +25,7 @@ pub fn print_table(source: DataTable) {
     let rest = source
         .packages_availability
         .into_iter()
-        .map(|(pkg, avail)| row_from_pkgdata(pkg, avail));
+        .map(row_from_pkgdata);
     let table: PrettyTable = first.chain(rest).collect();
     table.printstd();
 }

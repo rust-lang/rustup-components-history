@@ -1,6 +1,6 @@
 //! A table of statuses.
 
-use crate::availability::AvailabilityData;
+use crate::availability::{AvailabilityData, AvailabilityRow};
 use chrono::NaiveDate;
 use std::{borrow::Borrow, iter};
 
@@ -12,7 +12,7 @@ pub struct Table<'a, Additional: 'a = ()> {
     /// Table's title.
     pub title: Vec<String>,
     /// A list of packages and their availabilities sorted by package name in an ascending order.
-    pub packages_availability: Vec<(&'a str, Vec<bool>)>,
+    pub packages_availability: Vec<AvailabilityRow<'a>>,
     /// Additional data to render.
     pub additional: Additional,
 }
@@ -166,7 +166,7 @@ impl<'a, Additional> Table<'a, Additional> {
         let packages = sort(data.get_available_packages());
         let availability = packages
             .into_iter()
-            .map(|pkg| (pkg, data.get_availability_row(target, pkg, dates.clone())))
+            .map(|pkg| data.get_availability_row(target, pkg, dates.clone()))
             .collect();
         Table {
             current_target: target,

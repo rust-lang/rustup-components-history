@@ -18,6 +18,17 @@ pub struct AvailabilityData {
     data: HashMap<TargetTripple, PackagesAvailability>,
 }
 
+/// A single row in an availability table.
+#[derive(Debug, serde::Serialize)]
+pub struct AvailabilityRow<'a> {
+    /// Name of the package.
+    pub package_name: &'a str,
+    /// List of "availabilities".
+    pub availability_list: Vec<bool>,
+    /// A hidden field to improve compatibility.
+    _hidden: (),
+}
+
 impl AvailabilityData {
     /// Adds an availability data from a given [`Manifest`].
     pub fn add_manifest(&mut self, manifest: Manifest) {
@@ -75,7 +86,12 @@ impl AvailabilityData {
     /// given package is available on a given moment.
     ///
     /// Availability is checked against the specified target and against the `*` target.
-    pub fn get_availability_row<I>(&self, target: &str, pkg: &str, dates: I) -> Vec<bool>
+    pub fn get_availability_row<'a, I>(
+        &self,
+        target: &str,
+        pkg: &'a str,
+        dates: I,
+    ) -> AvailabilityRow<'a>
     where
         I: IntoIterator,
         I::Item: Borrow<NaiveDate>,
@@ -88,10 +104,15 @@ impl AvailabilityData {
                 (Some(x), None) | (None, Some(x)) => x.iter().collect(),
                 (None, None) => HashSet::new(),
             };
-        dates
+        let availability_list = dates
             .into_iter()
             .map(|date| available_dates.contains(date.borrow()))
-            .collect()
+            .collect();
+        AvailabilityRow {
+            package_name: pkg,
+            availability_list,
+            _hidden: (),
+        }
     }
 }
 
@@ -126,19 +147,22 @@ available = true
             "rust-src",
             vec![NaiveDate::from_ymd(2018, 9, 3)],
         );
-        assert_eq!(vec!(true), package_exists);
+        assert_eq!("rust-src", package_exists.package_name);
+        assert_eq!(vec!(true), package_exists.availability_list);
         let package_exists = availability.get_availability_row(
             "lol",
             "rust-src",
             vec![NaiveDate::from_ymd(2018, 9, 3)],
         );
-        assert_eq!(vec!(true), package_exists);
+        assert_eq!("rust-src", package_exists.package_name);
+        assert_eq!(vec!(true), package_exists.availability_list);
         let package_exists = availability.get_availability_row(
             "lol",
             "ahaha",
             vec![NaiveDate::from_ymd(2018, 9, 3)],
         );
-        assert_eq!(vec!(true), package_exists);
+        assert_eq!("ahaha", package_exists.package_name);
+        assert_eq!(vec!(true), package_exists.availability_list);
     }
 
     #[test]

@@ -1,6 +1,6 @@
 [package]
 name = "rustup-available-packages-html"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["mexus <gilaldpellaeon@gmail.com>"]
 edition = "2018"
 
