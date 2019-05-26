@@ -45,9 +45,9 @@
                         <th scope="row">{{row.package_name}}</th>
                         {{#each row.availability_list as |status|}}
                         {{#if status}}
-                        <td class="table-success text-center">present</td>
+                        <td class="table-primary text-center">present</td>
                         {{else}}
-                        <td class="table-danger text-center">missing</td>
+                        <td class="table-warning text-center">missing</td>
                         {{/if}}
                         {{/each}}
                         {{#if row.last_available}}
