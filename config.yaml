@@ -23,7 +23,7 @@ verbosity: INFO
 # A path where to store the downloaded manifests.
 # If ommited, no cache will be used, i.e. all the manifests will be
 # re-downloaded every time you run the tool.
-# cache_path: /path/to/cache/directory/
+cache_path: /tmp/manifests/
 
 # Platform tiers lists
 tiers:
