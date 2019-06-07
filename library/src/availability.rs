@@ -98,14 +98,7 @@ impl AvailabilityData {
         I: IntoIterator,
         I::Item: Borrow<NaiveDate>,
     {
-        let available_on_target = self.data.get(target).and_then(|packages| packages.get(pkg));
-        let available_on_wildcard = self.data.get("*").and_then(|packages| packages.get(pkg));
-        let available_dates: HashSet<&NaiveDate> =
-            match (available_on_target, available_on_wildcard) {
-                (Some(x), Some(y)) => x.union(y).collect(),
-                (Some(x), None) | (None, Some(x)) => x.iter().collect(),
-                (None, None) => HashSet::new(),
-            };
+        let available_dates = self.available_dates(target, pkg);
         let availability_list = dates
             .into_iter()
             .map(|date| available_dates.contains(date.borrow()))
@@ -113,9 +106,26 @@ impl AvailabilityData {
         AvailabilityRow {
             package_name: pkg,
             availability_list,
-            last_available: available_dates.iter().map(|&&date| date).max(),
+            last_available: available_dates.into_iter().max(),
             _hidden: (),
         }
+    }
+
+    /// Retrieves a set of all the dates when a given package was available on a given target.
+    fn available_dates(&self, target: &str, pkg: &str) -> HashSet<NaiveDate> {
+        let available_on_target = self.data.get(target).and_then(|packages| packages.get(pkg));
+        let available_on_wildcard = self.data.get("*").and_then(|packages| packages.get(pkg));
+        // FIXME cloned -> copied when 1.36 releases.
+        match (available_on_target, available_on_wildcard) {
+            (Some(x), Some(y)) => x.union(y).cloned().collect(),
+            (Some(x), None) | (None, Some(x)) => x.iter().cloned().collect(),
+            (None, None) => HashSet::new(),
+        }
+    }
+
+    /// Finds when a given package was last available on a given target.
+    pub fn last_available(&self, target: &str, pkg: &str) -> Option<NaiveDate> {
+        self.available_dates(target, pkg).into_iter().max()
     }
 }
 
