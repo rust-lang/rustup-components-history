@@ -5,7 +5,7 @@ use chrono::{NaiveDate, Utc};
 use either::Either;
 use failure::{format_err, ResultExt};
 use handlebars::{handlebars_helper, Handlebars};
-use opts::{Config, Tier};
+use opts::Config;
 use rustup_available_packages::{
     cache::{FsCache, NoopCache},
     table::Table,
@@ -13,9 +13,8 @@ use rustup_available_packages::{
 };
 use serde::Serialize;
 use std::{
-    collections::HashMap,
     fs::{create_dir_all, File},
-    io,
+    io::{self, Write},
     path::{Path, PathBuf},
 };
 use structopt::StructOpt;
@@ -90,7 +89,6 @@ fn generate_html(
         .with_context(|_| format!("File path: {:?}", &template_path))?;
 
     let all_targets = data.get_available_targets();
-    log::info!("Available targets: {:?}", all_targets);
 
     let additional = TiersData {
         tiers: TiersTable::new(tiers, &all_targets),
@@ -119,6 +117,28 @@ fn generate_html(
         handlebars
             .render_to_write(TEMPLATE_NAME, &table, out)
             .with_context(|_| format!("Can't render [{:?}] for [{}]", template_path, target))?;
+    }
+    Ok(())
+}
+
+fn generate_fs_tree(data: &AvailabilityData, output: &Path) -> Result<(), failure::Error> {
+    let targets = data.get_available_targets();
+    let pkgs = data.get_available_packages();
+
+    for target in targets {
+        let target_path = output.join(target);
+        create_dir_all(&target_path)
+            .with_context(|_| format!("Can't create path {}", target_path.display()))?;
+        for pkg in &pkgs {
+            if let Some(date) = data.last_available(target, pkg) {
+                let path = target_path.join(pkg);
+                let mut f = File::create(&path)
+                    .with_context(|_| format!("Can't create file {}", path.display()))?;
+                writeln!(f, "{}", date.format("%Y-%m-%d"))?;
+            } else {
+                // If a package is not available, don't create a file for it at all.
+            }
+        }
     }
     Ok(())
 }
@@ -154,8 +174,11 @@ fn main() -> Result<(), failure::Error> {
         .take(config.days_in_past)
         .collect();
     data.add_manifests(manifests);
+    log::info!("Available targets: {:?}", data.get_available_targets());
+    log::info!("Available packages: {:?}", data.get_available_packages());
 
     generate_html(&data, &dates, config.html)?;
+    generate_fs_tree(&data, &config.file_tree_output)?;
 
     Ok(())
 }
