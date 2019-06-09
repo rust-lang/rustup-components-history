@@ -1049,7 +1049,7 @@ dependencies = [
 
 [[package]]
 name = "rustup-available-packages"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "derive_more 0.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1062,22 +1062,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustup-available-packages-html"
-version = "0.1.2"
-dependencies = [
- "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "either 1.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "fern 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "handlebars 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "rustup-available-packages 0.2.0",
- "serde 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_yaml 0.8.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "structopt 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "rustup-available-packages-term"
 version = "0.1.2"
 dependencies = [
@@ -1087,7 +1071,23 @@ dependencies = [
  "fern 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "prettytable-rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "rustup-available-packages 0.2.0",
+ "rustup-available-packages 0.2.1",
+ "structopt 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "rustup-available-packages-web"
+version = "0.1.2"
+dependencies = [
+ "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "either 1.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fern 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "handlebars 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustup-available-packages 0.2.1",
+ "serde 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_yaml 0.8.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
