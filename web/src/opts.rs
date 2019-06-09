@@ -36,8 +36,8 @@ fn default_additional_days() -> usize {
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub template_path: PathBuf,
-    pub output_pattern: String,
+    #[serde(flatten)]
+    pub html: Html,
     pub days_in_past: usize,
     #[serde(default = "default_additional_days")]
     pub additional_lookup_days: usize,
@@ -47,6 +47,13 @@ pub struct Config {
     pub verbosity: LevelFilter,
     #[serde(default)]
     pub cache_path: Option<PathBuf>,
+}
+
+/// Html-related configuration
+#[derive(Debug, Deserialize)]
+pub struct Html {
+    pub template_path: PathBuf,
+    pub output_pattern: String,
     #[serde(default)]
     pub tiers: HashMap<Tier, Vec<String>>,
 }
@@ -189,9 +196,12 @@ mod test {
         let defaults: Config = serde_yaml::from_str(&defaults).unwrap();
         assert_eq!(
             Some("/path/to/template.html"),
-            defaults.template_path.to_str(),
+            defaults.html.template_path.to_str(),
         );
-        assert_eq!("/path/to/output/{{target}}.html", defaults.output_pattern,);
+        assert_eq!(
+            "/path/to/output/{{target}}.html",
+            defaults.html.output_pattern,
+        );
         assert_eq!(7, defaults.days_in_past,);
         assert_eq!(default_channel(), defaults.channel,);
         assert_eq!(default_verbosity(), defaults.verbosity,);
@@ -200,9 +210,18 @@ mod test {
             Some("/tmp/manifests/"),
             defaults.cache_path.as_ref().and_then(|x| x.to_str()),
         );
-        assert_eq!(Some(8), defaults.tiers.get(&Tier::Tier1).map(Vec::len));
-        assert_eq!(Some(49), defaults.tiers.get(&Tier::Tier2).map(Vec::len));
-        assert_eq!(Some(5), defaults.tiers.get(&Tier::Tier25).map(Vec::len));
-        assert_eq!(Some(15), defaults.tiers.get(&Tier::Tier3).map(Vec::len));
+        assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
+        assert_eq!(
+            Some(49),
+            defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
+        );
+        assert_eq!(
+            Some(5),
+            defaults.html.tiers.get(&Tier::Tier25).map(Vec::len)
+        );
+        assert_eq!(
+            Some(15),
+            defaults.html.tiers.get(&Tier::Tier3).map(Vec::len)
+        );
     }
 }
