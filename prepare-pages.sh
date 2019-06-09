@@ -10,6 +10,6 @@ cargo build --verbose --all
 cargo test --verbose --all
 
 # Generate the pages
-mkdir output
-cargo run --release --bin=rustup-available-packages-html -- render -c config.yaml
-ln -s x86_64-unknown-linux-gnu.html output/index.html
+mkdir -p output
+cargo run --release --bin=rustup-available-packages-web -- render -c config.yaml
+ln -fs x86_64-unknown-linux-gnu.html output/index.html

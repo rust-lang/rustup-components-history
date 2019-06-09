@@ -8,9 +8,9 @@ on different platforms.
 Please refer to [docs.rs](https://docs.rs/rustup-available-packages) for more info on
 the library, and to the source code of the binary crate for usage hints.
 
-## The HTML part
+## The Web part
 
-Under the `html` directory you will find a binary crate that's capable of
+Under the `web` directory you will find a binary crate that's capable of
 producing web-pages like
 [https://rust-lang.github.io/rustup-components-history/](https://rust-lang.github.io/rustup-components-history/).
 
