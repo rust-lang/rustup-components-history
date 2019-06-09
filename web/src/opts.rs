@@ -47,6 +47,7 @@ pub struct Config {
     pub verbosity: LevelFilter,
     #[serde(default)]
     pub cache_path: Option<PathBuf>,
+    pub file_tree_output: PathBuf,
 }
 
 /// Html-related configuration
@@ -74,6 +75,15 @@ template_path: /path/to/template.html
 # A pattern that will be used to render output files. Any instance of a
 # `{{{{target}}}}` will be replaced with a target name.
 output_pattern: "/path/to/output/{{{{target}}}}.html"
+
+# A path where a file tree of available packages will be created.
+# The tool will generate a set of files under a given *output* directory with the
+# following pattern: file_tree_output/$target/$package, where $target stands for a target
+# host architecture, like x86_64-unknown-linux-gnu, and $package stands for a package
+# name, like rls or rust-src. Each of those files will contain a date in a "%Y-%m-%d"
+# format (e.g. 2019-12-24) which represents the latest date when the package was (is)
+# available for that specific target.
+file_tree_output: /path/to/file-tree/
 
 # For how many days in the past would you like to peek.
 days_in_past: 7
@@ -201,6 +211,10 @@ mod test {
         assert_eq!(
             "/path/to/output/{{target}}.html",
             defaults.html.output_pattern,
+        );
+        assert_eq!(
+            Some("/path/to/file-tree/"),
+            defaults.file_tree_output.to_str()
         );
         assert_eq!(7, defaults.days_in_past,);
         assert_eq!(default_channel(), defaults.channel,);
