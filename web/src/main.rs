@@ -1,11 +1,11 @@
 mod opts;
 mod tiers_table;
 
-use chrono::Utc;
+use chrono::{NaiveDate, Utc};
 use either::Either;
 use failure::{format_err, ResultExt};
 use handlebars::{handlebars_helper, Handlebars};
-use opts::Config;
+use opts::{Config, Tier};
 use rustup_available_packages::{
     cache::{FsCache, NoopCache},
     table::Table,
@@ -13,6 +13,7 @@ use rustup_available_packages::{
 };
 use serde::Serialize;
 use std::{
+    collections::HashMap,
     fs::{create_dir_all, File},
     io,
     path::{Path, PathBuf},
@@ -65,9 +66,61 @@ fn setup_logger(verbosity: log::LevelFilter) -> Result<(), fern::InitError> {
 }
 
 #[derive(Serialize)]
-struct Additional<'a> {
+struct TiersData<'a> {
     tiers: TiersTable<'a>,
     datetime: String,
+}
+
+fn generate_html(
+    data: &AvailabilityData,
+    dates: &[NaiveDate],
+    opts::Html {
+        template_path,
+        output_pattern,
+        tiers,
+    }: opts::Html,
+) -> Result<(), failure::Error> {
+    const TEMPLATE_NAME: &str = "target_info";
+    let mut handlebars = Handlebars::new();
+    handlebars_helper!(streq: |x: str, y: str| x  == y);
+    handlebars.register_helper("streq", Box::new(streq));
+    handlebars.set_strict_mode(true);
+    handlebars
+        .register_template_file(TEMPLATE_NAME, &template_path)
+        .with_context(|_| format!("File path: {:?}", &template_path))?;
+
+    let all_targets = data.get_available_targets();
+    log::info!("Available targets: {:?}", all_targets);
+
+    let additional = TiersData {
+        tiers: TiersTable::new(tiers, &all_targets),
+        datetime: Utc::now().format("%d %b %Y, %H:%M:%S UTC").to_string(),
+    };
+
+    for target in &all_targets {
+        log::info!("Processing target {}", target);
+        let output_path = handlebars
+            .render_template(&output_pattern, &PathRenderData { target })
+            .with_context(|_| format!("Invalid output pattern: {}", &output_pattern))?;
+        if let Some(parent) = Path::new(&output_path).parent() {
+            create_dir_all(parent)
+                .with_context(|_| format!("Can't create path {}", parent.display()))?;
+        }
+        log::info!("Preparing file {}", output_path);
+        let out = File::create(&output_path)
+            .with_context(|_| format!("Can't create file [{}]", output_path))?;
+
+        let table = Table::builder(&data, target)
+            .dates(dates)
+            .additional(&additional)
+            .build();
+
+        log::info!("Writing target {} to {:?}", target, output_path);
+        handlebars
+            .render_to_write(TEMPLATE_NAME, &table, out)
+            .with_context(|_| format!("Can't render [{:?}] for [{}]", template_path, target))?;
+    }
+    Ok(())
 }
 
 fn main() -> Result<(), failure::Error> {
@@ -81,15 +134,6 @@ fn main() -> Result<(), failure::Error> {
         }
     };
     setup_logger(config.verbosity)?;
-    const TEMPLATE_NAME: &str = "target_info";
-
-    let mut handlebars = Handlebars::new();
-    handlebars_helper!(streq: |x: str, y: str| x  == y);
-    handlebars.register_helper("streq", Box::new(streq));
-    handlebars.set_strict_mode(true);
-    handlebars
-        .register_template_file(TEMPLATE_NAME, &config.template_path)
-        .with_context(|_| format!("File path: {:?}", config.template_path))?;
 
     let mut data: AvailabilityData = Default::default();
     let cache = if let Some(cache_path) = config.cache_path.as_ref() {
@@ -111,39 +155,7 @@ fn main() -> Result<(), failure::Error> {
         .collect();
     data.add_manifests(manifests);
 
-    let all_targets = data.get_available_targets();
-    log::info!("Available targets: {:?}", all_targets);
-
-    let output_pattern = config.output_pattern;
-    let template_path = config.template_path;
-    let additional = Additional {
-        tiers: TiersTable::new(config.tiers, &all_targets),
-        datetime: Utc::now().format("%d %b %Y, %H:%M:%S UTC").to_string(),
-    };
-
-    for target in &all_targets {
-        log::info!("Processing target {}", target);
-        let output_path = handlebars
-            .render_template(&output_pattern, &PathRenderData { target })
-            .with_context(|_| format!("Invalid output pattern: {}", output_pattern))?;
-        if let Some(parent) = Path::new(&output_path).parent() {
-            create_dir_all(parent)
-                .with_context(|_| format!("Can't create path {}", parent.display()))?;
-        }
-        log::info!("Preparing file {}", output_path);
-        let out = File::create(&output_path)
-            .with_context(|_| format!("Can't create file [{}]", output_path))?;
-
-        let table = Table::builder(&data, target)
-            .dates(&dates)
-            .additional(&additional)
-            .build();
-
-        log::info!("Writing target {} to {:?}", target, output_path);
-        handlebars
-            .render_to_write(TEMPLATE_NAME, &table, out)
-            .with_context(|_| format!("Can't render [{:?}] for [{}]", template_path, target))?;
-    }
+    generate_html(&data, &dates, config.html)?;
 
     Ok(())
 }
