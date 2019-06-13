@@ -121,7 +121,11 @@ fn generate_html(
     Ok(())
 }
 
-fn generate_fs_tree(data: &AvailabilityData, output: &Path) -> Result<(), failure::Error> {
+fn generate_fs_tree(
+    data: &AvailabilityData,
+    dates: &[NaiveDate],
+    output: &Path,
+) -> Result<(), failure::Error> {
     let targets = data.get_available_targets();
     let pkgs = data.get_available_packages();
 
@@ -129,14 +133,34 @@ fn generate_fs_tree(data: &AvailabilityData, output: &Path) -> Result<(), failur
         let target_path = output.join(target);
         create_dir_all(&target_path)
             .with_context(|_| format!("Can't create path {}", target_path.display()))?;
+
         for pkg in &pkgs {
-            if let Some(date) = data.last_available(target, pkg) {
+            let row = data.get_availability_row(target, pkg, dates.clone());
+            if let Some(date) = row.last_available {
                 let path = target_path.join(pkg);
                 let mut f = File::create(&path)
                     .with_context(|_| format!("Can't create file {}", path.display()))?;
                 writeln!(f, "{}", date.format("%Y-%m-%d"))?;
             } else {
                 // If a package is not available, don't create a file for it at all.
+            }
+
+            // This should always be true, but better to output nothing than to panic
+            // or output corrupt data.
+            if dates.len() == row.availability_list.len() {
+                let path = target_path.join(&format!("{}.json", pkg));
+                let mut f = File::create(&path)
+                    .with_context(|_| format!("Can't create file {}", path.display()))?;
+                write!(f, "{{")?;
+                for (date, avail) in dates.iter().zip(row.availability_list.iter()) {
+                    write!(f, "\"{}\":{},", date.format("%Y-%m-%d"), avail)?;
+                }
+                if let Some(date) = row.last_available {
+                    write!(f, "\"last_available\":\"{}\"", date.format("%Y-%m-%d"))?;
+                } else {
+                    write!(f, "\"last_available\":null")?;
+                }
+                write!(f, "}}")?;
             }
         }
     }
@@ -178,7 +202,7 @@ fn main() -> Result<(), failure::Error> {
     log::info!("Available packages: {:?}", data.get_available_packages());
 
     generate_html(&data, &dates, config.html)?;
-    generate_fs_tree(&data, &config.file_tree_output)?;
+    generate_fs_tree(&data, &dates, &config.file_tree_output)?;
 
     Ok(())
 }

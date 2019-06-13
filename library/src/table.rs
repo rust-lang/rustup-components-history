@@ -88,7 +88,7 @@ impl<'a, Dates, DateFmt, Additional> TableBuilder<'a, Dates, DateFmt, Additional
     /// [chrono::format::strftime](https://docs.rs/chrono/0.4.6/chrono/format/strftime/index.html).
     ///
     /// The default is `"%Y-%m-%d"`.
-    pub fn date_format<T>(self, date_format: T) -> TableBuilder<'a, Dates, T, Additional>
+    pub fn date_format<T>(self, date_fmt: T) -> TableBuilder<'a, Dates, T, Additional>
     where
         T: AsRef<str>,
     {
@@ -97,7 +97,7 @@ impl<'a, Dates, DateFmt, Additional> TableBuilder<'a, Dates, DateFmt, Additional
             target: self.target,
             dates: self.dates,
             first_cell: self.first_cell,
-            date_fmt: date_format,
+            date_fmt,
             additional_data: self.additional_data,
         }
     }
