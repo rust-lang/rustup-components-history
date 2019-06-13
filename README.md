@@ -14,7 +14,7 @@ Under the `web` directory you will find a binary crate that's capable of
 producing web-pages like
 [https://rust-lang.github.io/rustup-components-history/](https://rust-lang.github.io/rustup-components-history/).
 
-Machine-readable information on the latests availability is can be fetched on a
+Machine-readable information on the latests availability can be fetched on a
 *per-component-per-target* basis, i.e.
 `https://rust-lang.github.io/rustup-components-history/$target/$package` where `$target` stands for
 a target host architecture, like `x86_64-unknown-linux-gnu`, and `$package` stands for a package
@@ -24,6 +24,15 @@ time on `x86_64-apple-darwin` is as simple as running the following command:
 ```
 $ curl https://rust-lang.github.io/rustup-components-history/x86_64-unknown-linux-gnu/miri
 2019-06-08
+```
+
+More information (in a JSON format) can be found at a similar location with a `.json` suffix. This
+data will include at least the last date the package was available (if it ever was) and whether the
+package was available over a configurable range of dates. E.g.,
+
+```
+$ curl https://rust-lang.github.io/rustup-components-history/x86_64-unknown-linux-gnu/miri.json
+{"2019-06-13":true,"2019-06-12":true,"2019-06-11":true,"2019-06-10":false,"2019-06-09":true,"2019-06-08":true,"2019-06-07":true,"last_available":"2019-06-13"}
 ```
 
 Run the binary with a `--help` flag to see available options.
