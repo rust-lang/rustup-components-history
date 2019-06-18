@@ -135,7 +135,7 @@ fn generate_fs_tree(
             .with_context(|_| format!("Can't create path {}", target_path.display()))?;
 
         for pkg in &pkgs {
-            let row = data.get_availability_row(target, pkg, dates.clone());
+            let row = data.get_availability_row(target, pkg, dates);
             if let Some(date) = row.last_available {
                 let path = target_path.join(pkg);
                 let mut f = File::create(&path)
