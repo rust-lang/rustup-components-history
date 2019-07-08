@@ -22,7 +22,7 @@ name, like `rls` or `rust-src`. For example, getting the date when `miri` was av
 time on `x86_64-apple-darwin` is as simple as running the following command:
 
 ```
-$ curl https://rust-lang.github.io/rustup-components-history/x86_64-unknown-linux-gnu/miri
+$ curl https://rust-lang.github.io/rustup-components-history/x86_64-apple-darwin/miri
 2019-06-08
 ```
 
