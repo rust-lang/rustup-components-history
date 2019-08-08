@@ -5,6 +5,7 @@ use chrono::{NaiveDate, Utc};
 use either::Either;
 use failure::{format_err, ResultExt};
 use handlebars::{handlebars_helper, Handlebars};
+use itertools::{Itertools, Position};
 use opts::Config;
 use rustup_available_packages::{
     cache::{FsCache, NoopCache},
@@ -13,6 +14,7 @@ use rustup_available_packages::{
 };
 use serde::Serialize;
 use std::{
+    fmt::Display,
     fs::{create_dir_all, File},
     io::{self, Write},
     path::{Path, PathBuf},
@@ -121,6 +123,22 @@ fn generate_html(
     Ok(())
 }
 
+/// Saves a list of packages to a json file.
+fn packages_json(
+    pkgs: impl IntoIterator<Item = impl Display>,
+    path: impl AsRef<Path>,
+) -> io::Result<()> {
+    let mut f = File::create(path)?;
+    writeln!(f, "[")?;
+    pkgs.into_iter()
+        .with_position()
+        .try_for_each(|pkg| match pkg {
+            Position::Only(pkg) | Position::Last(pkg) => writeln!(f, "\"{}\"", pkg),
+            Position::First(pkg) | Position::Middle(pkg) => writeln!(f, "\"{}\",", pkg),
+        })?;
+    writeln!(f, "]")
+}
+
 fn generate_fs_tree(
     data: &AvailabilityData,
     dates: &[NaiveDate],
@@ -128,6 +146,8 @@ fn generate_fs_tree(
 ) -> Result<(), failure::Error> {
     let targets = data.get_available_targets();
     let pkgs = data.get_available_packages();
+
+    packages_json(&pkgs, output.join("packages.json")).with_context(|_| "packages.json")?;
 
     for target in targets {
         let target_path = output.join(target);
