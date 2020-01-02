@@ -224,9 +224,9 @@ mod test {
             Some("/tmp/manifests/"),
             defaults.cache_path.as_ref().and_then(|x| x.to_str()),
         );
-        assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
+        assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(49),
+            Some(46),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
@@ -234,7 +234,7 @@ mod test {
             defaults.html.tiers.get(&Tier::Tier25).map(Vec::len)
         );
         assert_eq!(
-            Some(15),
+            Some(19),
             defaults.html.tiers.get(&Tier::Tier3).map(Vec::len)
         );
     }
