@@ -108,7 +108,6 @@ cache_path: /tmp/manifests/
 # Platform tiers lists
 tiers:
   Tier1:
-    - "i686-apple-darwin"
     - "i686-pc-windows-gnu"
     - "i686-pc-windows-msvc"
     - "i686-unknown-linux-gnu"
@@ -128,13 +127,10 @@ tiers:
     - "arm-unknown-linux-musleabi"
     - "arm-unknown-linux-musleabihf"
     - "armv5te-unknown-linux-gnueabi"
-    - "armv7-apple-ios"
     - "armv7-linux-androideabi"
     - "armv7-unknown-linux-gnueabihf"
     - "armv7-unknown-linux-musleabihf"
-    - "armv7s-apple-ios"
     - "asmjs-unknown-emscripten"
-    - "i386-apple-ios"
     - "i586-pc-windows-msvc"
     - "i586-unknown-linux-gnu"
     - "i586-unknown-linux-musl"
@@ -173,6 +169,10 @@ tiers:
     - "powerpc-unknown-linux-gnuspe"
     - "sparc-unknown-linux-gnu"
   Tier3:
+    - "armv7-apple-ios"
+    - "armv7s-apple-ios"
+    - "i386-apple-ios"
+    - "i686-apple-darwin"
     - "i686-unknown-haiku"
     - "i686-unknown-netbsd"
     - "le32-unknown-nacl"
@@ -224,9 +224,9 @@ mod test {
             Some("/tmp/manifests/"),
             defaults.cache_path.as_ref().and_then(|x| x.to_str()),
         );
-        assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
+        assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(49),
+            Some(46),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
@@ -234,7 +234,7 @@ mod test {
             defaults.html.tiers.get(&Tier::Tier25).map(Vec::len)
         );
         assert_eq!(
-            Some(15),
+            Some(19),
             defaults.html.tiers.get(&Tier::Tier3).map(Vec::len)
         );
     }
