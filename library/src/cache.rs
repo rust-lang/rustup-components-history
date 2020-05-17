@@ -19,7 +19,8 @@ impl FsCache {
     pub fn new(path: impl AsRef<Path>) -> Result<Self, Error> {
         let path = path.as_ref();
         if !path.exists() {
-            fs::create_dir_all(path).map_err(|e| (e, format!("creating path {:?}", path)))?;
+            fs::create_dir_all(path)
+                .map_err(|e| Error::Io(e, format!("creating path {:?}", path)))?;
         }
         Ok(FsCache {
             storage_path: Some(path.into()),
