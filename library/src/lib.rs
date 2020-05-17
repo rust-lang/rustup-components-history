@@ -28,25 +28,25 @@ pub use source::{DefaultSource, SourceInfo};
 use std::io;
 
 /// An error that might happen inside the library.
-#[derive(Debug, derive_more::From, failure::Fail)]
+#[derive(Debug, derive_more::From, thiserror::Error)]
 pub enum Error {
     /// TOML parsing error.
-    #[fail(display = "TOML deserialization error {} on manifest {}", _0, _1)]
-    TomlDe(#[cause] toml::de::Error, String),
+    #[error("TOML deserialization error {0} on manifest {1}")]
+    TomlDe(#[source] toml::de::Error, String),
 
     /// TOML serialization error.
-    #[fail(display = "TOML serialization error {} on manifest {}", _0, _1)]
-    TomlSer(#[cause] toml::ser::Error, String),
+    #[error("TOML serialization error {0} on manifest {1}")]
+    TomlSer(#[source] toml::ser::Error, String),
 
     /// Error in the `reqwest` library.
-    #[fail(display = "reqwest error {} on url {}", _0, _1)]
-    Reqwest(#[cause] reqwest::Error, String),
+    #[error("reqwest error {0} on url {1}")]
+    Reqwest(#[source] reqwest::Error, String),
 
     /// Got a bad HTTP response.
-    #[fail(display = "HTTP error {} on url {}", _0, _1)]
+    #[error("HTTP error {0} on url {1}")]
     BadResponse(reqwest::StatusCode, String),
 
     /// I/O error.
-    #[fail(display = "I/O error {} at {}", _0, _1)]
-    Io(#[cause] io::Error, String),
+    #[error("I/O error {0} at {1}")]
+    Io(#[source] io::Error, String),
 }
