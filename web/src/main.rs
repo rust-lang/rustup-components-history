@@ -4,10 +4,10 @@ mod tiers_table;
 use anyhow::Context;
 use chrono::{NaiveDate, Utc};
 use handlebars::{handlebars_helper, Handlebars};
-use itertools::{Itertools, Position};
 use opts::Config;
 use rustup_available_packages::{cache::FsCache, table::Table, AvailabilityData, Downloader};
 use serde::Serialize;
+use std::collections::HashMap;
 use std::{
     fmt::Display,
     fs::{create_dir_all, File},
@@ -107,15 +107,13 @@ fn packages_json(
     pkgs: impl IntoIterator<Item = impl Display>,
     path: impl AsRef<Path>,
 ) -> io::Result<()> {
-    let mut f = File::create(path)?;
-    writeln!(f, "[")?;
-    pkgs.into_iter()
-        .with_position()
-        .try_for_each(|pkg| match pkg {
-            Position::Only(pkg) | Position::Last(pkg) => writeln!(f, "\"{}\"", pkg),
-            Position::First(pkg) | Position::Middle(pkg) => writeln!(f, "\"{}\",", pkg),
-        })?;
-    writeln!(f, "]")
+    let contents = serde_json::to_vec(
+        &pkgs
+            .into_iter()
+            .map(|p| p.to_string())
+            .collect::<Vec<String>>(),
+    )?;
+    std::fs::write(path, contents)
 }
 
 fn generate_fs_tree(
@@ -148,22 +146,28 @@ fn generate_fs_tree(
             // or output corrupt data.
             if dates.len() == row.availability_list.len() {
                 let path = target_path.join(&format!("{}.json", pkg));
-                let mut f = File::create(&path)
-                    .with_context(|| format!("Can't create file {}", path.display()))?;
-                write!(f, "{{")?;
-                for (date, avail) in dates.iter().zip(row.availability_list.iter()) {
-                    write!(f, "\"{}\":{},", date.format("%Y-%m-%d"), avail)?;
-                }
-                if let Some(date) = row.last_available {
-                    write!(f, "\"last_available\":\"{}\"", date.format("%Y-%m-%d"))?;
-                } else {
-                    write!(f, "\"last_available\":null")?;
-                }
-                write!(f, "}}")?;
+
+                let contents = serde_json::to_vec_pretty(&TargetPkg {
+                    availability: dates
+                        .iter()
+                        .zip(row.availability_list.iter())
+                        .map(|(date, avail)| (date.format("%Y-%m-%d").to_string(), *avail))
+                        .collect(),
+                    last_available: row.last_available.map(|d| d.format("%Y-%m-%d").to_string()),
+                })?;
+                std::fs::write(&path, contents)
+                    .with_context(|| format!("Can't write file {}", path.display()))?;
             }
         }
     }
     Ok(())
+}
+
+#[derive(serde::Serialize)]
+struct TargetPkg {
+    #[serde(flatten)]
+    availability: HashMap<String, bool>,
+    last_available: Option<String>,
 }
 
 fn main() -> anyhow::Result<()> {
