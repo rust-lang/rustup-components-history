@@ -50,22 +50,6 @@ struct PathRenderData<'a> {
     target: &'a str,
 }
 
-fn setup_logger(verbosity: log::LevelFilter) -> Result<(), fern::InitError> {
-    fern::Dispatch::new()
-        .format(|out, message, record| {
-            out.finish(format_args!(
-                "[{}][{}] {}",
-                record.target(),
-                record.level(),
-                message
-            ))
-        })
-        .level(verbosity)
-        .chain(io::stderr())
-        .apply()?;
-    Ok(())
-}
-
 #[derive(Serialize)]
 struct TiersData<'a> {
     tiers: TiersTable<'a>,
@@ -197,7 +181,9 @@ fn main() -> anyhow::Result<()> {
             return Ok(());
         }
     };
-    setup_logger(config.verbosity)?;
+    env_logger::Builder::from_default_env()
+        .filter_level(config.verbosity)
+        .init();
 
     let mut data: AvailabilityData = Default::default();
     let cache = if let Some(cache_path) = config.cache_path.as_ref() {
