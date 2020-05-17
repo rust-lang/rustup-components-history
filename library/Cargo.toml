@@ -17,4 +17,4 @@ thiserror = "1"
 log = "0.4.5"
 reqwest = { version = "0.10.0", features = ["blocking"] }
 serde = { version = "1", features = [ "derive" ] }
-toml = "0.4"
+toml = "0.5"
