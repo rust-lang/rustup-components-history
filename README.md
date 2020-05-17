@@ -39,13 +39,6 @@ Run the binary with a `--help` flag to see available options.
 
 More info is coming :)
 
-## The Terminal part
-
-Under the `term` directory you will find a binary crate that you can use
-directly from you favourite shell. The `--help` flag is also available.
-
-More info is coming as well :)
-
 ### License
 
 Licensed under either of
