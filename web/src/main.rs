@@ -3,15 +3,10 @@ mod tiers_table;
 
 use anyhow::Context;
 use chrono::{NaiveDate, Utc};
-use either::Either;
 use handlebars::{handlebars_helper, Handlebars};
 use itertools::{Itertools, Position};
 use opts::Config;
-use rustup_available_packages::{
-    cache::{FsCache, NoopCache},
-    table::Table,
-    AvailabilityData, Downloader,
-};
+use rustup_available_packages::{cache::FsCache, table::Table, AvailabilityData, Downloader};
 use serde::Serialize;
 use std::{
     fmt::Display,
@@ -187,9 +182,9 @@ fn main() -> anyhow::Result<()> {
 
     let mut data: AvailabilityData = Default::default();
     let cache = if let Some(cache_path) = config.cache_path.as_ref() {
-        Either::Left(FsCache::new(cache_path).with_context(|| "Can't initialize cache")?)
+        FsCache::new(cache_path).with_context(|| "Can't initialize cache")?
     } else {
-        Either::Right(NoopCache {})
+        FsCache::noop()
     };
     let downloader = Downloader::with_default_source(&config.channel)
         .set_cache(cache)
