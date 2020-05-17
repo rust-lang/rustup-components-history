@@ -2,55 +2,14 @@
 
 use crate::{manifest::Manifest, Error};
 use chrono::NaiveDate;
-use either::Either;
 use std::{
     fs,
     path::{Path, PathBuf},
 };
 
-/// A cache trait.
-pub trait Cache {
-    /// Tries to load a manifest from a cached file.
-    fn get(&self, day: NaiveDate) -> Option<Manifest>;
-
-    /// Stores a manifest to the disk.
-    fn store(&self, manifest: &Manifest);
-}
-
-impl<L, R> Cache for Either<L, R>
-where
-    L: Cache,
-    R: Cache,
-{
-    fn get(&self, day: NaiveDate) -> Option<Manifest> {
-        match self {
-            Either::Left(x) => x.get(day),
-            Either::Right(x) => x.get(day),
-        }
-    }
-
-    fn store(&self, manifest: &Manifest) {
-        match self {
-            Either::Left(x) => x.store(manifest),
-            Either::Right(x) => x.store(manifest),
-        }
-    }
-}
-
-/// A cache that does nothing.
-pub struct NoopCache {}
-
-impl Cache for NoopCache {
-    fn get(&self, _day: NaiveDate) -> Option<Manifest> {
-        None
-    }
-
-    fn store(&self, _manifest: &Manifest) {}
-}
-
 /// A cache that stores manifests on a file system.
 pub struct FsCache {
-    storage_path: PathBuf,
+    storage_path: Option<PathBuf>,
 }
 
 impl FsCache {
@@ -63,18 +22,29 @@ impl FsCache {
             fs::create_dir_all(path).map_err(|e| (e, format!("creating path {:?}", path)))?;
         }
         Ok(FsCache {
-            storage_path: path.into(),
+            storage_path: Some(path.into()),
         })
+    }
+
+    /// Initializes a no-op cache.
+    pub fn noop() -> Self {
+        FsCache { storage_path: None }
     }
 
     fn make_file_name(&self, day: NaiveDate) -> PathBuf {
         self.storage_path
+            .as_ref()
+            .unwrap()
             .join(day.format("%Y-%m-%d.toml").to_string())
     }
 }
 
-impl Cache for FsCache {
-    fn get(&self, day: NaiveDate) -> Option<Manifest> {
+impl FsCache {
+    pub(crate) fn get(&self, day: NaiveDate) -> Option<Manifest> {
+        if self.storage_path.is_none() {
+            return None;
+        }
+
         let file_name = self.make_file_name(day);
         if !file_name.exists() {
             log::debug!("File {:?} doesn't exist", file_name);
@@ -85,7 +55,11 @@ impl Cache for FsCache {
             .ok()
     }
 
-    fn store(&self, manifest: &Manifest) {
+    pub(crate) fn store(&self, manifest: &Manifest) {
+        if self.storage_path.is_none() {
+            return;
+        }
+
         let file_name = self.make_file_name(manifest.date);
         match manifest.save_to_file(&file_name) {
             Ok(_) => log::debug!("Manifest stored at {:?}", file_name),

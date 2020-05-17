@@ -1,6 +1,6 @@
 use super::skip_errors::SkipMissingExt;
 use crate::{
-    cache::{Cache, NoopCache},
+    cache::FsCache,
     manifest::Manifest,
     source::{DefaultSource, SourceInfo},
     Error,
@@ -9,10 +9,10 @@ use chrono::{Duration, NaiveDate};
 use std::{io, iter};
 
 /// Manifests downloader and parser.
-pub struct Downloader<S, C = NoopCache> {
+pub struct Downloader<S> {
     client: reqwest::blocking::Client,
     source: S,
-    cache: C,
+    cache: FsCache,
     skip_missing_days: usize,
 }
 
@@ -29,19 +29,18 @@ impl<S> Downloader<S> {
         Downloader {
             client: reqwest::blocking::Client::new(),
             source,
-            cache: NoopCache {},
+            cache: FsCache::noop(),
             skip_missing_days: 0,
         }
     }
 }
 
-impl<S, C> Downloader<S, C>
+impl<S> Downloader<S>
 where
     S: SourceInfo,
-    C: Cache,
 {
     /// Sets a cache for the downloader. By default a [`NoopCache`] is used.
-    pub fn set_cache<NewCache: Cache>(self, c: NewCache) -> Downloader<S, NewCache> {
+    pub fn set_cache(self, c: FsCache) -> Downloader<S> {
         Downloader {
             client: self.client,
             source: self.source,
@@ -55,7 +54,7 @@ where
     /// Please not that this setting only affects the [`get_last_manifests`] method.
     ///
     /// Off (zero) by default.
-    pub fn skip_missing_days(self, skip: usize) -> Downloader<S, C> {
+    pub fn skip_missing_days(self, skip: usize) -> Downloader<S> {
         Downloader {
             client: self.client,
             source: self.source,
