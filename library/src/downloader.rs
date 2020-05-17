@@ -10,7 +10,7 @@ use std::{io, iter};
 
 /// Manifests downloader and parser.
 pub struct Downloader<S, C = NoopCache> {
-    client: reqwest::Client,
+    client: reqwest::blocking::Client,
     source: S,
     cache: C,
     skip_missing_days: usize,
@@ -27,7 +27,7 @@ impl<S> Downloader<S> {
     /// Create a new instance of the [`Downloader`] with a provided instance of [`SourceInfo`].
     pub fn new(source: S) -> Self {
         Downloader {
-            client: reqwest::Client::new(),
+            client: reqwest::blocking::Client::new(),
             source,
             cache: NoopCache {},
             skip_missing_days: 0,
