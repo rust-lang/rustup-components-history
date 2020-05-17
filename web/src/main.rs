@@ -1,9 +1,9 @@
 mod opts;
 mod tiers_table;
 
+use anyhow::Context;
 use chrono::{NaiveDate, Utc};
 use either::Either;
-use failure::{format_err, ResultExt};
 use handlebars::{handlebars_helper, Handlebars};
 use itertools::{Itertools, Position};
 use opts::Config;
@@ -80,7 +80,7 @@ fn generate_html(
         output_pattern,
         tiers,
     }: opts::Html,
-) -> Result<(), failure::Error> {
+) -> anyhow::Result<()> {
     const TEMPLATE_NAME: &str = "target_info";
     let mut handlebars = Handlebars::new();
     handlebars_helper!(streq: |x: str, y: str| x  == y);
@@ -88,7 +88,7 @@ fn generate_html(
     handlebars.set_strict_mode(true);
     handlebars
         .register_template_file(TEMPLATE_NAME, &template_path)
-        .with_context(|_| format!("File path: {:?}", &template_path))?;
+        .with_context(|| format!("File path: {:?}", &template_path))?;
 
     let all_targets = data.get_available_targets();
 
@@ -101,14 +101,14 @@ fn generate_html(
         log::info!("Processing target {}", target);
         let output_path = handlebars
             .render_template(&output_pattern, &PathRenderData { target })
-            .with_context(|_| format!("Invalid output pattern: {}", &output_pattern))?;
+            .with_context(|| format!("Invalid output pattern: {}", &output_pattern))?;
         if let Some(parent) = Path::new(&output_path).parent() {
             create_dir_all(parent)
-                .with_context(|_| format!("Can't create path {}", parent.display()))?;
+                .with_context(|| format!("Can't create path {}", parent.display()))?;
         }
         log::info!("Preparing file {}", output_path);
         let out = File::create(&output_path)
-            .with_context(|_| format!("Can't create file [{}]", output_path))?;
+            .with_context(|| format!("Can't create file [{}]", output_path))?;
 
         let table = Table::builder(&data, target)
             .dates(dates)
@@ -118,7 +118,7 @@ fn generate_html(
         log::info!("Writing target {} to {:?}", target, output_path);
         handlebars
             .render_to_write(TEMPLATE_NAME, &table, out)
-            .with_context(|_| format!("Can't render [{:?}] for [{}]", template_path, target))?;
+            .with_context(|| format!("Can't render [{:?}] for [{}]", template_path, target))?;
     }
     Ok(())
 }
@@ -143,23 +143,23 @@ fn generate_fs_tree(
     data: &AvailabilityData,
     dates: &[NaiveDate],
     output: &Path,
-) -> Result<(), failure::Error> {
+) -> anyhow::Result<()> {
     let targets = data.get_available_targets();
     let pkgs = data.get_available_packages();
 
-    packages_json(&pkgs, output.join("packages.json")).with_context(|_| "packages.json")?;
+    packages_json(&pkgs, output.join("packages.json")).with_context(|| "packages.json")?;
 
     for target in targets {
         let target_path = output.join(target);
         create_dir_all(&target_path)
-            .with_context(|_| format!("Can't create path {}", target_path.display()))?;
+            .with_context(|| format!("Can't create path {}", target_path.display()))?;
 
         for pkg in &pkgs {
             let row = data.get_availability_row(target, pkg, dates);
             if let Some(date) = row.last_available {
                 let path = target_path.join(pkg);
                 let mut f = File::create(&path)
-                    .with_context(|_| format!("Can't create file {}", path.display()))?;
+                    .with_context(|| format!("Can't create file {}", path.display()))?;
                 writeln!(f, "{}", date.format("%Y-%m-%d"))?;
             } else {
                 // If a package is not available, don't create a file for it at all.
@@ -170,7 +170,7 @@ fn generate_fs_tree(
             if dates.len() == row.availability_list.len() {
                 let path = target_path.join(&format!("{}.json", pkg));
                 let mut f = File::create(&path)
-                    .with_context(|_| format!("Can't create file {}", path.display()))?;
+                    .with_context(|| format!("Can't create file {}", path.display()))?;
                 write!(f, "{{")?;
                 for (date, avail) in dates.iter().zip(row.availability_list.iter()) {
                     write!(f, "\"{}\":{},", date.format("%Y-%m-%d"), avail)?;
@@ -187,11 +187,11 @@ fn generate_fs_tree(
     Ok(())
 }
 
-fn main() -> Result<(), failure::Error> {
+fn main() -> anyhow::Result<()> {
     let cmd_opts = CmdOpts::from_args();
     let config = match cmd_opts {
         CmdOpts::Render(cmd_opts) => Config::load(&cmd_opts.config_path)
-            .with_context(|_| format!("Can't load config {:?}", cmd_opts.config_path))?,
+            .with_context(|| format!("Can't load config {:?}", cmd_opts.config_path))?,
         CmdOpts::PrintConfig => {
             println!("{}", Config::default_with_comments());
             return Ok(());
@@ -201,9 +201,7 @@ fn main() -> Result<(), failure::Error> {
 
     let mut data: AvailabilityData = Default::default();
     let cache = if let Some(cache_path) = config.cache_path.as_ref() {
-        Either::Left(
-            FsCache::new(cache_path).map_err(|e| format_err!("Can't initialize cache: {}", e))?,
-        )
+        Either::Left(FsCache::new(cache_path).with_context(|| "Can't initialize cache")?)
     } else {
         Either::Right(NoopCache {})
     };

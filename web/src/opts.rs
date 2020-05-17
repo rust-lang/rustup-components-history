@@ -60,7 +60,7 @@ pub struct Html {
 }
 
 impl Config {
-    pub fn load(path: impl AsRef<Path>) -> Result<Self, failure::Error> {
+    pub fn load(path: impl AsRef<Path>) -> anyhow::Result<Self> {
         let path = path.as_ref();
         let f = File::open(path)?;
         Ok(serde_yaml::from_reader(f)?)
