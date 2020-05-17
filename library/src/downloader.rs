@@ -113,6 +113,6 @@ where
         let mut bytes = Vec::new();
         io::copy(&mut response, &mut bytes).map_err(|e| Error::Io(e, url.into()))?;
 
-        toml::from_slice(&bytes).map_err(|e| (e, url.to_string()).into())
+        toml::from_slice(&bytes).map_err(|e| Error::TomlDe(e, url.to_string()))
     }
 }

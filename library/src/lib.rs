@@ -28,7 +28,7 @@ pub use source::{DefaultSource, SourceInfo};
 use std::io;
 
 /// An error that might happen inside the library.
-#[derive(Debug, derive_more::From, thiserror::Error)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// TOML parsing error.
     #[error("TOML deserialization error {0} on manifest {1}")]

@@ -1,10 +1,17 @@
 //! Types that are used internally.
 
+use std::fmt;
 use std::{borrow::Borrow, ops::Deref, rc::Rc};
 
 /// Reference-counted build-target triple.
-#[derive(Debug, Clone, Hash, PartialEq, derive_more::Display, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct TargetTripple(Rc<str>);
+
+impl fmt::Display for TargetTripple {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 impl Deref for TargetTripple {
     type Target = str;

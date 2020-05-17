@@ -53,20 +53,21 @@ impl Manifest {
     /// Tries to load a `Manifest` from the file system.
     pub fn load_from_fs(path: impl AsRef<Path>) -> Result<Self, Error> {
         let path = path.as_ref();
-        let mut f = File::open(path).map_err(|e| (e, format!("opening {:?}", path)))?;
+        let mut f = File::open(path).map_err(|e| Error::Io(e, format!("opening {:?}", path)))?;
         let mut data = String::new();
         f.read_to_string(&mut data)
-            .map_err(|e| (e, format!("reading {:?}", path)))?;
-        toml::from_str(&data).map_err(|e| (e, format!("{:?}", path)).into())
+            .map_err(|e| Error::Io(e, format!("reading {:?}", path)))?;
+        toml::from_str(&data).map_err(|e| Error::TomlDe(e, format!("{:?}", path)))
     }
 
     /// Serializes the `Manifest` to a given path.
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
         let path = path.as_ref();
-        let mut f = File::create(path).map_err(|e| (e, format!("creating {:?}", path)))?;
-        let data = toml::to_vec(self).map_err(|e| (e, format!("serializing {}", self.date)))?;
+        let mut f = File::create(path).map_err(|e| Error::Io(e, format!("creating {:?}", path)))?;
+        let data = toml::to_vec(self)
+            .map_err(|e| Error::TomlSer(e, format!("serializing {}", self.date)))?;
         f.write_all(&data)
-            .map_err(|e| (e, format!("writing to {:?}", path)))?;
+            .map_err(|e| Error::Io(e, format!("writing to {:?}", path)))?;
         Ok(())
     }
 }
