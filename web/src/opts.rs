@@ -158,6 +158,7 @@ tiers:
     - "x86_64-unknown-cloudabi"
     - "x86_64-unknown-freebsd"
     - "x86_64-unknown-fuchsia"
+    - "x86_64-unknown-illumos"
     - "x86_64-unknown-linux-gnux32"
     - "x86_64-unknown-linux-musl"
     - "x86_64-unknown-netbsd"
@@ -226,7 +227,7 @@ mod test {
         );
         assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(46),
+            Some(47),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
