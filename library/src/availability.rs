@@ -45,14 +45,13 @@ impl AvailabilityData {
                 .map(|name| String::clone(name))
                 .unwrap_or(package_name);
             for (target_tripple, target_info) in info.targets {
-                let package_set = self
-                    .data
-                    .entry(target_tripple.clone())
-                    .or_default()
-                    .entry(package_name.clone())
-                    .or_default();
                 if target_info.available {
-                    package_set.insert(manifest.date);
+                    self.data
+                        .entry(target_tripple.clone())
+                        .or_default()
+                        .entry(package_name.clone())
+                        .or_default()
+                        .insert(manifest.date);
                 }
             }
         }
@@ -93,22 +92,25 @@ impl AvailabilityData {
         target: &str,
         pkg: &'a str,
         dates: I,
-    ) -> AvailabilityRow<'a>
+    ) -> Option<AvailabilityRow<'a>>
     where
         I: IntoIterator,
         I::Item: Borrow<NaiveDate>,
     {
+        if self.data.get(target).and_then(|t| t.get(pkg)).is_none() {
+            return None;
+        }
         let available_dates = self.available_dates(target, pkg);
         let availability_list = dates
             .into_iter()
             .map(|date| available_dates.contains(date.borrow()))
             .collect();
-        AvailabilityRow {
+        Some(AvailabilityRow {
             package_name: pkg,
             availability_list,
             last_available: available_dates.into_iter().max(),
             _hidden: (),
-        }
+        })
     }
 
     /// Retrieves a set of all the dates when a given package was available on a given target.

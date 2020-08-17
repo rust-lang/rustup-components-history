@@ -166,7 +166,7 @@ impl<'a, Additional> Table<'a, Additional> {
         let packages = sort(data.get_available_packages());
         let availability = packages
             .into_iter()
-            .map(|pkg| data.get_availability_row(target, pkg, dates.clone()))
+            .filter_map(|pkg| data.get_availability_row(target, pkg, dates.clone()))
             .collect();
         Table {
             current_target: target,
