@@ -118,6 +118,7 @@ tiers:
   Tier2:
     - "aarch64-apple-ios"
     - "aarch64-linux-android"
+    - "aarch64-pc-windows-msvc"
     - "aarch64-unknown-fuchsia"
     - "aarch64-unknown-linux-gnu"
     - "aarch64-unknown-linux-musl"
@@ -227,7 +228,7 @@ mod test {
         );
         assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(47),
+            Some(48),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
