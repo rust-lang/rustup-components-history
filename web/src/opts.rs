@@ -116,6 +116,7 @@ tiers:
     - "x86_64-pc-windows-msvc"
     - "x86_64-unknown-linux-gnu"
   Tier2:
+    - "aarch64-apple-darwin"
     - "aarch64-apple-ios"
     - "aarch64-linux-android"
     - "aarch64-pc-windows-msvc"
@@ -228,7 +229,7 @@ mod test {
         );
         assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(48),
+            Some(49),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
