@@ -115,13 +115,13 @@ tiers:
     - "x86_64-pc-windows-gnu"
     - "x86_64-pc-windows-msvc"
     - "x86_64-unknown-linux-gnu"
+    - "aarch64-unknown-linux-gnu"
   Tier2:
     - "aarch64-apple-darwin"
     - "aarch64-apple-ios"
     - "aarch64-linux-android"
     - "aarch64-pc-windows-msvc"
     - "aarch64-unknown-fuchsia"
-    - "aarch64-unknown-linux-gnu"
     - "aarch64-unknown-linux-musl"
     - "arm-linux-androideabi"
     - "arm-unknown-linux-gnueabi"
@@ -227,9 +227,9 @@ mod test {
             Some("/tmp/manifests/"),
             defaults.cache_path.as_ref().and_then(|x| x.to_str()),
         );
-        assert_eq!(Some(7), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
+        assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(49),
+            Some(48),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
