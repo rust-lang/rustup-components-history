@@ -7,7 +7,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-/// Support tiers: https://forge.rust-lang.org/platform-support.html.
+/// Support tiers: https://doc.rust-lang.org/nightly/rustc/platform-support.html.
 #[derive(Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
 pub enum Tier {
     /// Tier 1 platforms.
@@ -157,7 +157,6 @@ tiers:
     - "x86_64-linux-android"
     - "x86_64-rumprun-netbsd"
     - "x86_64-sun-solaris"
-    - "x86_64-unknown-cloudabi"
     - "x86_64-unknown-freebsd"
     - "x86_64-unknown-fuchsia"
     - "x86_64-unknown-illumos"
@@ -166,9 +165,6 @@ tiers:
     - "x86_64-unknown-netbsd"
     - "x86_64-unknown-redox"
   Tier25:
-    - "aarch64-unknown-cloudabi"
-    - "armv7-unknown-cloudabi-eabihf"
-    - "i686-unknown-cloudabi"
     - "powerpc-unknown-linux-gnuspe"
     - "sparc-unknown-linux-gnu"
   Tier3:
@@ -229,11 +225,11 @@ mod test {
         );
         assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(48),
+            Some(47),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
-            Some(5),
+            Some(2),
             defaults.html.tiers.get(&Tier::Tier25).map(Vec::len)
         );
         assert_eq!(
