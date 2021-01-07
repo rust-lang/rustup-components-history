@@ -86,7 +86,6 @@ tiers:
     - "x86_64-linux-android"
     - "x86_64-rumprun-netbsd"
     - "x86_64-sun-solaris"
-    - "x86_64-unknown-cloudabi"
     - "x86_64-unknown-freebsd"
     - "x86_64-unknown-fuchsia"
     - "x86_64-unknown-illumos"
@@ -95,9 +94,6 @@ tiers:
     - "x86_64-unknown-netbsd"
     - "x86_64-unknown-redox"
   Tier25:
-    - "aarch64-unknown-cloudabi"
-    - "armv7-unknown-cloudabi-eabihf"
-    - "i686-unknown-cloudabi"
     - "powerpc-unknown-linux-gnuspe"
     - "sparc-unknown-linux-gnu"
   Tier3:
