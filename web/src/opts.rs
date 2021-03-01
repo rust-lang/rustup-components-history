@@ -155,7 +155,6 @@ tiers:
     - "wasm32-unknown-emscripten"
     - "x86_64-apple-ios"
     - "x86_64-linux-android"
-    - "x86_64-rumprun-netbsd"
     - "x86_64-sun-solaris"
     - "x86_64-unknown-freebsd"
     - "x86_64-unknown-fuchsia"
@@ -225,7 +224,7 @@ mod test {
         );
         assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(47),
+            Some(46),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
