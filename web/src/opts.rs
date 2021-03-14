@@ -119,9 +119,9 @@ tiers:
   Tier2:
     - "aarch64-apple-darwin"
     - "aarch64-apple-ios"
+    - "aarch64-fuchsia"
     - "aarch64-linux-android"
     - "aarch64-pc-windows-msvc"
-    - "aarch64-unknown-fuchsia"
     - "aarch64-unknown-linux-musl"
     - "arm-linux-androideabi"
     - "arm-unknown-linux-gnueabi"
@@ -153,11 +153,12 @@ tiers:
     - "sparcv9-sun-solaris"
     - "wasm32-unknown-unknown"
     - "wasm32-unknown-emscripten"
+    - "wasm32-wasi"
     - "x86_64-apple-ios"
+    - "x86_64-fuchsia"
     - "x86_64-linux-android"
     - "x86_64-sun-solaris"
     - "x86_64-unknown-freebsd"
-    - "x86_64-unknown-fuchsia"
     - "x86_64-unknown-illumos"
     - "x86_64-unknown-linux-gnux32"
     - "x86_64-unknown-linux-musl"
@@ -224,7 +225,7 @@ mod test {
         );
         assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(46),
+            Some(47),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
