@@ -11,12 +11,16 @@ use std::{
 #[derive(Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
 pub enum Tier {
     /// Tier 1 platforms.
+    #[serde(rename="Tier 1")]
     Tier1,
     /// Tier 2 platforms.
+    #[serde(rename="Tier 2")]
     Tier2,
     /// Tier 2.5 platforms.
+    #[serde(rename="Tier 2.5")]
     Tier25,
     /// Tier 3 platforms.
+    #[serde(rename="Tier 3")]
     Tier3,
     #[doc(hidden)]
     UnknownTier,
@@ -107,7 +111,7 @@ cache_path: /tmp/manifests/
 
 # Platform tiers lists
 tiers:
-  Tier1:
+  Tier 1:
     - "i686-pc-windows-gnu"
     - "i686-pc-windows-msvc"
     - "i686-unknown-linux-gnu"
@@ -116,7 +120,7 @@ tiers:
     - "x86_64-pc-windows-msvc"
     - "x86_64-unknown-linux-gnu"
     - "aarch64-unknown-linux-gnu"
-  Tier2:
+  Tier 2:
     - "aarch64-apple-darwin"
     - "aarch64-apple-ios"
     - "aarch64-fuchsia"
@@ -164,10 +168,10 @@ tiers:
     - "x86_64-unknown-linux-musl"
     - "x86_64-unknown-netbsd"
     - "x86_64-unknown-redox"
-  Tier25:
+  Tier 2.5:
     - "powerpc-unknown-linux-gnuspe"
     - "sparc-unknown-linux-gnu"
-  Tier3:
+  Tier 3:
     - "armv7-apple-ios"
     - "armv7s-apple-ios"
     - "i386-apple-ios"
