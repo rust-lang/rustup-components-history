@@ -1,7 +1,6 @@
 [package]
 name = "rustup-available-packages-web"
 version = "0.1.3"
-authors = ["mexus <gilaldpellaeon@gmail.com>"]
 edition = "2018"
 
 [dependencies]
