@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    # Runs at 00:10 UTC every day. 
-    - cron: '10 0 * * *'
+    # Runs at 2:00 UTC every day (to give the release process 2h to complete).
+    - cron: '0 2 * * *'
 
 env:
   CARGO_TERM_COLOR: always
