@@ -187,7 +187,6 @@ tiers:
     - "thumbv7em-none-eabi"
     - "thumbv7em-none-eabihf"
     - "thumbv7m-none-eabi"
-    - "x86_64-unknown-bitrig"
     - "x86_64-unknown-dragonfly"
     - "x86_64-unknown-haiku"
     - "x86_64-unknown-openbsd"
@@ -237,7 +236,7 @@ mod test {
             defaults.html.tiers.get(&Tier::Tier25).map(Vec::len)
         );
         assert_eq!(
-            Some(19),
+            Some(18),
             defaults.html.tiers.get(&Tier::Tier3).map(Vec::len)
         );
     }
