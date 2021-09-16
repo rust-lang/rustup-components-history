@@ -33,16 +33,21 @@
             <table class="table table-hover table-bordered table-responsive-lg table-sm">
                 <thead>
                     <tr>
-                    {{#each title as |t|}}
+                        <th scope="col" class="text-center"></th>
+                        {{#each title as |t|}}
                         <th scope="col" class="text-center">{{t}}</th>
-                    {{/each}}
-                        <th scope="col" class="text-center">Last available</th>
+                        {{/each}}
                     </tr>
                 </thead>
                 <tbody>
                     {{#each packages_availability as |row|}}
                     <tr>
                         <th scope="row">{{row.package_name}}</th>
+                        {{#if row.last_available}}
+                        <td class="text-center">{{row.last_available}}</td>
+                        {{else}}
+                        <td class="text-center">N/A</td>
+                        {{/if}}
                         {{#each row.availability_list as |status|}}
                         {{#if status}}
                         <td class="table-primary text-center">present</td>
@@ -50,11 +55,6 @@
                         <td class="table-warning text-center">missing</td>
                         {{/if}}
                         {{/each}}
-                        {{#if row.last_available}}
-                        <td class="text-center">{{row.last_available}}</td>
-                        {{else}}
-                        <td class="text-center">N/A</td>
-                        {{/if}}
                     </tr>
                     {{/each}}
                 </tbody>
