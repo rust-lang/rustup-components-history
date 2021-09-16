@@ -31,13 +31,12 @@ jobs:
       if: ${{ github.event_name != 'pull_request' }}
       run: |
         git worktree add gh-pages gh-pages
-        git config user.name "Deploy from CI"
-        git config user.email ""
         cd gh-pages
         # Delete the ref to avoid keeping history.
         git update-ref -d refs/heads/gh-pages
         rm -rf *
         mv ../output/* .
         git add .
-        git commit -m "Deploy $GITHUB_SHA to gh-pages"
+        git -c 'user.name=github-actions[bot]' -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' \
+          commit -m "Deploy $GITHUB_SHA to gh-pages"
         git push --force
