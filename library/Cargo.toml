@@ -1,8 +1,8 @@
 [package]
 name = "rustup-available-packages"
 version = "0.2.1"
-description = "Rustup tools state info"
-license = "MIT/Apache-2.0"
+description = "rustup tools state info"
+license = "MIT OR Apache-2.0"
 keywords = ["rustup"]
 repository = "https://github.com/rust-lang/rustup-components-history"
 documentation = "https://docs.rs/rustup-available-packages/"
