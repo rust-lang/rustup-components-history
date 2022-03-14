@@ -11,10 +11,10 @@ the library, and to the source code of the binary crate for usage hints.
 ## The Web part
 
 Under the `web` directory you will find a binary crate that's capable of
-producing web-pages like
+producing web pages like
 [https://rust-lang.github.io/rustup-components-history/](https://rust-lang.github.io/rustup-components-history/).
 
-Machine-readable information on the latests availability can be fetched on a
+Machine-readable information on the latest availability can be fetched on a
 *per-component-per-target* basis, i.e.
 `https://rust-lang.github.io/rustup-components-history/$target/$package` where `$target` stands for
 a target host architecture, like `x86_64-unknown-linux-gnu`, and `$package` stands for a package
@@ -43,8 +43,8 @@ More info is coming :)
 
 Licensed under either of
 
- * Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+ * Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or https://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
 
 at your option.
 
