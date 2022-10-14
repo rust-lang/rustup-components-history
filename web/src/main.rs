@@ -119,12 +119,23 @@ fn packages_json(
 fn generate_fs_tree(
     data: &AvailabilityData,
     dates: &[NaiveDate],
-    output: &Path,
+    config: Config,
 ) -> anyhow::Result<()> {
+    let output = &config.file_tree_output;
     let targets = data.get_available_targets();
     let pkgs = data.get_available_packages();
 
     packages_json(&pkgs, output.join("packages.json")).with_context(|| "packages.json")?;
+
+    let all_targets = data.get_available_targets();
+    let additional = TiersData {
+        tiers: TiersTable::new(config.html.tiers, &all_targets),
+        datetime: Utc::now().format("%d %b %Y, %H:%M:%S UTC").to_string(),
+    };
+    std::fs::write(
+        output.join("additional.json"),
+        serde_json::to_string_pretty(&additional)?,
+    )?;
 
     for target in targets {
         let target_path = output.join(target);
@@ -208,8 +219,8 @@ fn main() -> anyhow::Result<()> {
     log::info!("Available targets: {:?}", data.get_available_targets());
     log::info!("Available packages: {:?}", data.get_available_packages());
 
-    generate_html(&data, &dates, config.html)?;
-    generate_fs_tree(&data, &dates, &config.file_tree_output)?;
+    // generate_html(&data, &dates, config.html)?;
+    generate_fs_tree(&data, &dates, config)?;
 
     Ok(())
 }
