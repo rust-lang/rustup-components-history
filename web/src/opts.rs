@@ -127,6 +127,7 @@ tiers:
     - "aarch64-linux-android"
     - "aarch64-pc-windows-msvc"
     - "aarch64-unknown-linux-musl"
+    - "aarch64-unknown-uefi"
     - "arm-linux-androideabi"
     - "arm-unknown-linux-gnueabi"
     - "arm-unknown-linux-gnueabihf"
@@ -143,6 +144,7 @@ tiers:
     - "i686-linux-android"
     - "i686-unknown-freebsd"
     - "i686-unknown-linux-musl"
+    - "i686-unknown-uefi"
     - "mips-unknown-linux-gnu"
     - "mips-unknown-linux-musl"
     - "mips64-unknown-linux-gnuabi64"
@@ -168,6 +170,7 @@ tiers:
     - "x86_64-unknown-linux-musl"
     - "x86_64-unknown-netbsd"
     - "x86_64-unknown-redox"
+    - "x86_64-unknown-uefi"
   Tier 2.5:
     - "powerpc-unknown-linux-gnuspe"
     - "sparc-unknown-linux-gnu"
@@ -229,7 +232,7 @@ mod test {
         );
         assert_eq!(Some(8), defaults.html.tiers.get(&Tier::Tier1).map(Vec::len));
         assert_eq!(
-            Some(47),
+            Some(50),
             defaults.html.tiers.get(&Tier::Tier2).map(Vec::len)
         );
         assert_eq!(
