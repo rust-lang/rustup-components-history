@@ -24,6 +24,7 @@ jobs:
     - name: Prepare pages
       run: ./prepare-pages.sh
     - name: Deploy GitHub Pages
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         git worktree add gh-pages gh-pages
         git config user.name "Deploy from CI"
