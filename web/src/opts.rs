@@ -1,5 +1,3 @@
-use log::LevelFilter;
-use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     fmt::Display,
@@ -7,20 +5,23 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use log::LevelFilter;
+use serde::{Deserialize, Serialize};
+
 /// Support tiers: https://doc.rust-lang.org/nightly/rustc/platform-support.html.
 #[derive(Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
 pub enum Tier {
     /// Tier 1 platforms.
-    #[serde(rename="Tier 1")]
+    #[serde(rename = "Tier 1")]
     Tier1,
     /// Tier 2 platforms.
-    #[serde(rename="Tier 2")]
+    #[serde(rename = "Tier 2")]
     Tier2,
     /// Tier 2.5 platforms.
-    #[serde(rename="Tier 2.5")]
+    #[serde(rename = "Tier 2.5")]
     Tier25,
     /// Tier 3 platforms.
-    #[serde(rename="Tier 3")]
+    #[serde(rename = "Tier 3")]
     Tier3,
     #[doc(hidden)]
     UnknownTier,
@@ -161,7 +162,7 @@ tiers:
     - "wasm32-unknown-emscripten"
     - "wasm32-wasi"
     - "x86_64-apple-ios"
-    - "x86_64-fuchsia"
+    - "x86_64-unknown-fuchsia"
     - "x86_64-linux-android"
     - "x86_64-sun-solaris"
     - "x86_64-unknown-freebsd"
