@@ -36,7 +36,6 @@ tiers:
     - aarch64-apple-ios-sim
     - aarch64-fuchsia
     - aarch64-unknown-fuchsia
-    - aarch64-unknown-fuchsia
     - aarch64-linux-android
     - aarch64-unknown-none-softfloat
     - aarch64-unknown-none
@@ -91,7 +90,6 @@ tiers:
     - x86_64-fortanix-unknown-sgx
     - x86_64-fuchsia
     - x86_64-unknown-fuchsia
-    - x86_64-unknown-fuchsia
     - x86_64-linux-android
     - x86_64-pc-solaris
     - x86_64-unknown-linux-gnux32
@@ -138,7 +136,6 @@ tiers:
     - armv7k-apple-watchos
     - armv7s-apple-ios
     - avr-unknown-gnu-atmega328
-    - "-Z build-std=core"
     - bpfeb-unknown-none
     - bpfel-unknown-none
     - hexagon-unknown-linux-musl

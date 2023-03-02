@@ -29,10 +29,9 @@ fn gen_tiers() -> anyhow::Result<HashMap<Tier, Vec<String>>> {
     let html = tl::parse(&bytes, ParserOptions::default())?;
 
     let mut tiers = HashMap::new();
-    tiers.insert(Tier::Tier1, collect_targets_for_tier(&html, Tier::Tier1)?);
-    tiers.insert(Tier::Tier2, collect_targets_for_tier(&html, Tier::Tier2)?);
-    tiers.insert(Tier::Tier25, collect_targets_for_tier(&html, Tier::Tier25)?);
-    tiers.insert(Tier::Tier3, collect_targets_for_tier(&html, Tier::Tier3)?);
+    for tier in [Tier::Tier1, Tier::Tier2, Tier::Tier25, Tier::Tier3] {
+        tiers.insert(tier, collect_targets_for_tier(&html, tier)?);
+    }
     Ok(tiers)
 }
 
@@ -49,28 +48,38 @@ fn collect_targets_for_tier(html: &VDom, tier: Tier) -> anyhow::Result<Vec<Strin
             Tier::Tier3 => 3,
             Tier::UnknownTier => unreachable!(),
         })
-        .context("Not enough tier tables")?
+        .context("Unexpected tier table layout")?
         .get(html.parser())
-        .context("Parse error")?
+        .unwrap()
         .children()
-        .context("Not a tag")?
+        .context("tbody is not a tag")?
         .top()
         .iter()
     {
-        if let Some(table_row) = x.get(html.parser()).context("Parse error")?.as_tag() {
+        if let Some(table_row) = x.get(html.parser()).unwrap().as_tag() {
             if table_row.name() != "tr" {
                 continue;
             }
 
-            for html_target in table_row.query_selector(html.parser(), "code").unwrap() {
-                targets.push(
-                    html_target
-                        .get(html.parser())
-                        .context("Parse error")?
-                        .inner_text(html.parser())
-                        .into_owned(),
-                );
-            }
+            targets.push(
+                table_row
+                    .query_selector(html.parser(), "td")
+                    .unwrap()
+                    .next()
+                    .context("Table row does not have any columns.")?
+                    .get(html.parser())
+                    .unwrap()
+                    .as_tag()
+                    .context("td is not a tag")?
+                    .query_selector(html.parser(), "code")
+                    .unwrap()
+                    .next()
+                    .context("Table row does not have a code element in its first column")?
+                    .get(html.parser())
+                    .unwrap()
+                    .inner_text(html.parser())
+                    .into_owned(),
+            );
         }
     }
 
