@@ -6,9 +6,12 @@ use std::{
 
 use log::LevelFilter;
 use serde::{Deserialize, Serialize, Serializer};
+use strum::EnumIter;
 
 /// Support tiers: https://doc.rust-lang.org/nightly/rustc/platform-support.html.
-#[derive(Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
+#[derive(
+    Debug, Serialize, Deserialize, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, EnumIter,
+)]
 pub enum Tier {
     /// Tier 1 platforms.
     #[serde(rename = "Tier 1")]

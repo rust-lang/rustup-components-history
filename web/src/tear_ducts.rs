@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use anyhow::Context;
 use log::LevelFilter;
+use strum::IntoEnumIterator;
 use tl::{ParserOptions, VDom};
 
 use crate::opts::{Config, Html, Tier};
@@ -29,7 +30,7 @@ fn gen_tiers() -> anyhow::Result<HashMap<Tier, Vec<String>>> {
     let html = tl::parse(&bytes, ParserOptions::default())?;
 
     let mut tiers = HashMap::new();
-    for tier in [Tier::Tier1, Tier::Tier2, Tier::Tier25, Tier::Tier3] {
+    for tier in Tier::iter().filter(|t| *t != Tier::UnknownTier) {
         tiers.insert(tier, collect_targets_for_tier(&html, tier)?);
     }
     Ok(tiers)
