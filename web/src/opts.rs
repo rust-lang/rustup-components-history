@@ -1,6 +1,5 @@
 use std::{
     collections::{BTreeMap, HashMap},
-    fs,
     fs::File,
     path::{Path, PathBuf},
 };
@@ -109,16 +108,5 @@ impl Config {
         let path = path.as_ref();
         let f = File::open(path)?;
         Ok(serde_yaml::from_reader(f)?)
-    }
-
-    pub fn store(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
-        let path = path.as_ref();
-        if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)?;
-        }
-
-        let f = File::create(path)?;
-        serde_yaml::to_writer(&f, self)?;
-        Ok(())
     }
 }
