@@ -1,121 +1,218 @@
 ---
-# Path to a handlebars template file:
 template_path: template.html
-
-# A pattern that will be used to render output files. Any instance of a
-# `{{target}}` will be replaced with a target name.
 output_pattern: "output/{{target}}.html"
-
-# A path where a file tree of available packages will be created.
-# The tool will generate a set of files under a given *output* directory with the
-# following pattern: file_tree_output/$target/$package, where $target stands for a target
-# host architecture, like x86_64-unknown-linux-gnu, and $package stands for a package
-# name, like rls or rust-src. Each of those files will contain a date in a "%Y-%m-%d"
-# format (e.g. 2019-12-24) which represents the latest date when the package was (is)
-# available for that specific target.
-file_tree_output: output/
-
-# For how many days in the past would you like to peek.
-days_in_past: 7
-
-# For how many additional days should we look into to calculate "the last available" date.
-additional_lookup_days: 22
-
-# A release channel to check.
-# If ommited, the default channel is nightly.
-channel: nightly
-
-# Verbosity level, might be one of the following: OFF, ERROR, WARN, INFO, DEBUG or TRACE.
-# If ommited, the default level is WARN.
-verbosity: INFO
-
-# A path where to store the downloaded manifests.
-# If ommited, no cache will be used, i.e. all the manifests will be
-# re-downloaded every time you run the tool.
-cache_path: /tmp/manifests/
-
-# Platform tiers lists
 tiers:
   Tier 1:
-    - "i686-pc-windows-gnu"
-    - "i686-pc-windows-msvc"
-    - "i686-unknown-linux-gnu"
-    - "x86_64-apple-darwin"
-    - "x86_64-pc-windows-gnu"
-    - "x86_64-pc-windows-msvc"
-    - "x86_64-unknown-linux-gnu"
-    - "aarch64-unknown-linux-gnu"
+    - aarch64-unknown-linux-gnu
+    - i686-pc-windows-gnu
+    - i686-pc-windows-msvc
+    - i686-unknown-linux-gnu
+    - x86_64-apple-darwin
+    - x86_64-pc-windows-gnu
+    - x86_64-pc-windows-msvc
+    - x86_64-unknown-linux-gnu
   Tier 2:
-    - "aarch64-apple-darwin"
-    - "aarch64-apple-ios"
-    - "aarch64-fuchsia"
-    - "aarch64-linux-android"
-    - "aarch64-pc-windows-msvc"
-    - "aarch64-unknown-linux-musl"
-    - "aarch64-unknown-uefi"
-    - "arm-linux-androideabi"
-    - "arm-unknown-linux-gnueabi"
-    - "arm-unknown-linux-gnueabihf"
-    - "arm-unknown-linux-musleabi"
-    - "arm-unknown-linux-musleabihf"
-    - "armv5te-unknown-linux-gnueabi"
-    - "armv7-linux-androideabi"
-    - "armv7-unknown-linux-gnueabihf"
-    - "armv7-unknown-linux-musleabihf"
-    - "asmjs-unknown-emscripten"
-    - "i586-pc-windows-msvc"
-    - "i586-unknown-linux-gnu"
-    - "i586-unknown-linux-musl"
-    - "i686-linux-android"
-    - "i686-unknown-freebsd"
-    - "i686-unknown-linux-musl"
-    - "i686-unknown-uefi"
-    - "mips-unknown-linux-gnu"
-    - "mips-unknown-linux-musl"
-    - "mips64-unknown-linux-gnuabi64"
-    - "mips64el-unknown-linux-gnuabi64"
-    - "mipsel-unknown-linux-gnu"
-    - "mipsel-unknown-linux-musl"
-    - "powerpc-unknown-linux-gnu"
-    - "powerpc64-unknown-linux-gnu"
-    - "powerpc64le-unknown-linux-gnu"
-    - "s390x-unknown-linux-gnu"
-    - "sparc64-unknown-linux-gnu"
-    - "sparcv9-sun-solaris"
-    - "wasm32-unknown-unknown"
-    - "wasm32-unknown-emscripten"
-    - "wasm32-wasi"
-    - "x86_64-apple-ios"
-    - "x86_64-fuchsia"
-    - "x86_64-linux-android"
-    - "x86_64-sun-solaris"
-    - "x86_64-unknown-freebsd"
-    - "x86_64-unknown-illumos"
-    - "x86_64-unknown-linux-gnux32"
-    - "x86_64-unknown-linux-musl"
-    - "x86_64-unknown-netbsd"
-    - "x86_64-unknown-redox"
-    - "x86_64-unknown-uefi"
+    - aarch64-apple-darwin
+    - aarch64-pc-windows-msvc
+    - aarch64-unknown-linux-musl
+    - arm-unknown-linux-gnueabi
+    - arm-unknown-linux-gnueabihf
+    - armv7-unknown-linux-gnueabihf
+    - mips-unknown-linux-gnu
+    - mips64-unknown-linux-gnuabi64
+    - mips64el-unknown-linux-gnuabi64
+    - mipsel-unknown-linux-gnu
+    - powerpc-unknown-linux-gnu
+    - powerpc64-unknown-linux-gnu
+    - powerpc64le-unknown-linux-gnu
+    - riscv64gc-unknown-linux-gnu
+    - s390x-unknown-linux-gnu
+    - x86_64-unknown-freebsd
+    - x86_64-unknown-illumos
+    - x86_64-unknown-linux-musl
+    - x86_64-unknown-netbsd
   Tier 2.5:
-    - "powerpc-unknown-linux-gnuspe"
-    - "sparc-unknown-linux-gnu"
+    - aarch64-apple-ios
+    - aarch64-apple-ios-sim
+    - aarch64-fuchsia
+    - aarch64-unknown-fuchsia
+    - aarch64-unknown-fuchsia
+    - aarch64-linux-android
+    - aarch64-unknown-none-softfloat
+    - aarch64-unknown-none
+    - aarch64-unknown-uefi
+    - arm-linux-androideabi
+    - arm-unknown-linux-musleabi
+    - arm-unknown-linux-musleabihf
+    - armebv7r-none-eabi
+    - armebv7r-none-eabihf
+    - armv5te-unknown-linux-gnueabi
+    - armv5te-unknown-linux-musleabi
+    - armv7-linux-androideabi
+    - armv7-unknown-linux-gnueabi
+    - armv7-unknown-linux-musleabi
+    - armv7-unknown-linux-musleabihf
+    - armv7a-none-eabi
+    - armv7r-none-eabi
+    - armv7r-none-eabihf
+    - asmjs-unknown-emscripten
+    - i586-pc-windows-msvc
+    - i586-unknown-linux-gnu
+    - i586-unknown-linux-musl
+    - i686-linux-android
+    - i686-unknown-freebsd
+    - i686-unknown-linux-musl
+    - i686-unknown-uefi
+    - mips-unknown-linux-musl
+    - mips64-unknown-linux-muslabi64
+    - mips64el-unknown-linux-muslabi64
+    - mipsel-unknown-linux-musl
+    - nvptx64-nvidia-cuda
+    - riscv32i-unknown-none-elf
+    - riscv32imac-unknown-none-elf
+    - riscv32imc-unknown-none-elf
+    - riscv64gc-unknown-none-elf
+    - riscv64imac-unknown-none-elf
+    - sparc64-unknown-linux-gnu
+    - sparcv9-sun-solaris
+    - thumbv6m-none-eabi
+    - thumbv7em-none-eabi
+    - thumbv7em-none-eabihf
+    - thumbv7m-none-eabi
+    - thumbv7neon-linux-androideabi
+    - thumbv7neon-unknown-linux-gnueabihf
+    - thumbv8m.base-none-eabi
+    - thumbv8m.main-none-eabi
+    - thumbv8m.main-none-eabihf
+    - wasm32-unknown-emscripten
+    - wasm32-unknown-unknown
+    - wasm32-wasi
+    - x86_64-apple-ios
+    - x86_64-fortanix-unknown-sgx
+    - x86_64-fuchsia
+    - x86_64-unknown-fuchsia
+    - x86_64-unknown-fuchsia
+    - x86_64-linux-android
+    - x86_64-pc-solaris
+    - x86_64-unknown-linux-gnux32
+    - x86_64-unknown-none
+    - x86_64-unknown-redox
+    - x86_64-unknown-uefi
   Tier 3:
-    - "armv7-apple-ios"
-    - "armv7s-apple-ios"
-    - "i386-apple-ios"
-    - "i686-apple-darwin"
-    - "i686-unknown-haiku"
-    - "i686-unknown-netbsd"
-    - "le32-unknown-nacl"
-    - "mips-unknown-linux-uclibc"
-    - "mipsel-unknown-linux-uclibc"
-    - "msp430-none-elf"
-    - "sparc64-unknown-netbsd"
-    - "thumbv6m-none-eabi"
-    - "thumbv7em-none-eabi"
-    - "thumbv7em-none-eabihf"
-    - "thumbv7m-none-eabi"
-    - "x86_64-unknown-bitrig"
-    - "x86_64-unknown-dragonfly"
-    - "x86_64-unknown-haiku"
-    - "x86_64-unknown-openbsd"
+    - aarch64-apple-ios-macabi
+    - aarch64-apple-tvos
+    - aarch64-apple-watchos-sim
+    - aarch64-kmc-solid_asp3
+    - aarch64-nintendo-switch-freestanding
+    - aarch64-pc-windows-gnullvm
+    - aarch64-unknown-nto-qnx710
+    - aarch64-unknown-freebsd
+    - aarch64-unknown-hermit
+    - aarch64-unknown-linux-gnu_ilp32
+    - aarch64-unknown-netbsd
+    - aarch64-unknown-openbsd
+    - aarch64-unknown-redox
+    - aarch64-uwp-windows-msvc
+    - aarch64-wrs-vxworks
+    - aarch64_be-unknown-linux-gnu_ilp32
+    - aarch64_be-unknown-linux-gnu
+    - arm64_32-apple-watchos
+    - armeb-unknown-linux-gnueabi
+    - armv4t-none-eabi
+    - armv4t-unknown-linux-gnueabi
+    - armv5te-none-eabi
+    - armv5te-unknown-linux-uclibceabi
+    - armv6-unknown-freebsd
+    - armv6-unknown-netbsd-eabihf
+    - armv6k-nintendo-3ds
+    - armv7-apple-ios
+    - armv7-sony-vita-newlibeabihf
+    - armv7-unknown-linux-uclibceabi
+    - armv7-unknown-linux-uclibceabihf
+    - armv7-unknown-freebsd
+    - armv7-unknown-netbsd-eabihf
+    - armv7-wrs-vxworks-eabihf
+    - armv7a-kmc-solid_asp3-eabi
+    - armv7a-kmc-solid_asp3-eabihf
+    - armv7a-none-eabihf
+    - armv7k-apple-watchos
+    - armv7s-apple-ios
+    - avr-unknown-gnu-atmega328
+    - "-Z build-std=core"
+    - bpfeb-unknown-none
+    - bpfel-unknown-none
+    - hexagon-unknown-linux-musl
+    - i386-apple-ios
+    - i686-apple-darwin
+    - i686-pc-windows-msvc
+    - i686-unknown-haiku
+    - i686-unknown-netbsd
+    - i686-unknown-openbsd
+    - i686-uwp-windows-gnu
+    - i686-uwp-windows-msvc
+    - i686-wrs-vxworks
+    - m68k-unknown-linux-gnu
+    - mips-unknown-linux-uclibc
+    - mips64-openwrt-linux-musl
+    - mipsel-sony-psp
+    - mipsel-sony-psx
+    - mipsel-unknown-linux-uclibc
+    - mipsel-unknown-none
+    - mipsisa32r6-unknown-linux-gnu
+    - mipsisa32r6el-unknown-linux-gnu
+    - mipsisa64r6-unknown-linux-gnuabi64
+    - mipsisa64r6el-unknown-linux-gnuabi64
+    - msp430-none-elf
+    - powerpc-unknown-linux-gnuspe
+    - powerpc-unknown-linux-musl
+    - powerpc-unknown-netbsd
+    - powerpc-unknown-openbsd
+    - powerpc-wrs-vxworks-spe
+    - powerpc-wrs-vxworks
+    - powerpc64-unknown-freebsd
+    - powerpc64le-unknown-freebsd
+    - powerpc-unknown-freebsd
+    - powerpc64-unknown-linux-musl
+    - powerpc64-wrs-vxworks
+    - powerpc64le-unknown-linux-musl
+    - powerpc64-unknown-openbsd
+    - powerpc64-ibm-aix
+    - riscv32gc-unknown-linux-gnu
+    - riscv32gc-unknown-linux-musl
+    - riscv32im-unknown-none-elf
+    - riscv32imac-unknown-xous-elf
+    - riscv32imc-esp-espidf
+    - riscv64gc-unknown-freebsd
+    - riscv64gc-unknown-linux-musl
+    - riscv64gc-unknown-openbsd
+    - s390x-unknown-linux-musl
+    - sparc-unknown-linux-gnu
+    - sparc64-unknown-netbsd
+    - sparc64-unknown-openbsd
+    - thumbv4t-none-eabi
+    - thumbv5te-none-eabi
+    - thumbv7a-pc-windows-msvc
+    - thumbv7a-uwp-windows-msvc
+    - thumbv7neon-unknown-linux-musleabihf
+    - wasm64-unknown-unknown
+    - x86_64-apple-ios-macabi
+    - x86_64-apple-tvos
+    - x86_64-apple-watchos-sim
+    - x86_64-pc-nto-qnx710
+    - x86_64-pc-windows-gnullvm
+    - x86_64-pc-windows-msvc
+    - x86_64-sun-solaris
+    - x86_64-unknown-dragonfly
+    - x86_64-unknown-haiku
+    - x86_64-unknown-hermit
+    - x86_64-unknown-l4re-uclibc
+    - x86_64-unknown-openbsd
+    - x86_64-uwp-windows-gnu
+    - x86_64-uwp-windows-msvc
+    - x86_64-wrs-vxworks
+days_in_past: 7
+additional_lookup_days: 22
+channel: nightly
+verbosity: INFO
+cache_path: /tmp/manifests/
+file_tree_output: output/
