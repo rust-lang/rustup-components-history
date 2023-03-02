@@ -90,13 +90,10 @@ pub struct Html {
     pub tiers: HashMap<Tier, Vec<String>>,
 }
 
-fn ordered_map<S, K: Ord + Serialize, V: Serialize>(
+fn ordered_map<S: Serializer, K: Ord + Serialize, V: Serialize>(
     value: &HashMap<K, V>,
     serializer: S,
-) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
+) -> Result<S::Ok, S::Error> {
     value
         .iter()
         .collect::<BTreeMap<_, _>>()
