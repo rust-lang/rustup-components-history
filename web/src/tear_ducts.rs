@@ -39,7 +39,7 @@ fn gen_tiers() -> anyhow::Result<HashMap<Tier, Vec<String>>> {
 fn collect_targets_for_tier(html: &VDom, tier: Tier) -> anyhow::Result<Vec<String>> {
     let mut targets = Vec::new();
 
-    for x in html
+    for table_row in html
         .query_selector("tbody")
         .unwrap()
         .nth(match tier {
@@ -57,7 +57,7 @@ fn collect_targets_for_tier(html: &VDom, tier: Tier) -> anyhow::Result<Vec<Strin
         .top()
         .iter()
     {
-        if let Some(table_row) = x.get(html.parser()).unwrap().as_tag() {
+        if let Some(table_row) = table_row.get(html.parser()).unwrap().as_tag() {
             if table_row.name() != "tr" {
                 continue;
             }
