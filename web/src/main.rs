@@ -15,8 +15,8 @@ use serde::Serialize;
 use structopt::StructOpt;
 use tiers_table::TiersTable;
 
+mod config_gen;
 mod opts;
-mod tear_ducts;
 mod tiers_table;
 
 #[derive(StructOpt)]
@@ -201,7 +201,7 @@ fn main() -> anyhow::Result<()> {
 # $ cargo r -p rustup-available-packages-web -- print_config -c config.yaml
 ";
 
-            let config = tear_ducts::gen_config()?;
+            let config = config_gen::gen_config()?;
             if let Some(path) = config_path {
                 if let Some(parent) = path.parent() {
                     create_dir_all(parent)?;
