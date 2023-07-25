@@ -83,7 +83,7 @@ impl<'a, Dates, DateFmt, Additional> TableBuilder<'a, Dates, DateFmt, Additional
         }
     }
 
-    /// Sets a format in which the dates will be formated. Here's a formatting syntax for your
+    /// Sets a format in which the dates will be formatted. Here's a formatting syntax for your
     /// convenience:
     /// [chrono::format::strftime](https://docs.rs/chrono/0.4.6/chrono/format/strftime/index.html).
     ///

@@ -5,15 +5,15 @@ use std::{borrow::Borrow, ops::Deref, rc::Rc};
 
 /// Reference-counted build-target triple.
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
-pub struct TargetTripple(Rc<str>);
+pub struct TargetTriple(Rc<str>);
 
-impl fmt::Display for TargetTripple {
+impl fmt::Display for TargetTriple {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
-impl Deref for TargetTripple {
+impl Deref for TargetTriple {
     type Target = str;
 
     fn deref(&self) -> &str {
@@ -21,18 +21,18 @@ impl Deref for TargetTripple {
     }
 }
 
-impl Borrow<str> for TargetTripple {
+impl Borrow<str> for TargetTriple {
     fn borrow(&self) -> &str {
         &self.0
     }
 }
 
-impl<T> From<T> for TargetTripple
+impl<T> From<T> for TargetTriple
 where
     Rc<str>: From<T>,
 {
     fn from(t: T) -> Self {
-        TargetTripple(t.into())
+        TargetTriple(t.into())
     }
 }
 
