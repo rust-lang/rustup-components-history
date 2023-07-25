@@ -8,14 +8,14 @@ use std::{
 };
 
 type PackageName = String;
-type TargetTripple = String;
+type TargetTriple = String;
 type DatesSet = HashSet<NaiveDate>;
 type PackagesAvailability = HashMap<PackageName, DatesSet>;
 
 /// Data about packages availability in rust builds.
 #[derive(Debug, Default)]
 pub struct AvailabilityData {
-    data: HashMap<TargetTripple, PackagesAvailability>,
+    data: HashMap<TargetTriple, PackagesAvailability>,
 }
 
 /// A single row in an availability table.
@@ -44,10 +44,10 @@ impl AvailabilityData {
                 .get(&package_name)
                 .map(|name| String::clone(name))
                 .unwrap_or(package_name);
-            for (target_tripple, target_info) in info.targets {
+            for (target_triple, target_info) in info.targets {
                 if target_info.available {
                     self.data
-                        .entry(target_tripple.clone())
+                        .entry(target_triple.clone())
                         .or_default()
                         .entry(package_name.clone())
                         .or_default()
