@@ -139,8 +139,14 @@ mod tests {
     #[test]
     fn check() {
         let data = r#"date = "2018-09-03"
+[pkg.rust-src]
+version = "0.0.0"
+git_commit_hash = "0123456789abcdef"
 [pkg.rust-src.target."*"]
 available = true
+[pkg.ahaha]
+version = "0.0.0"
+git_commit_hash = "0123456789abcdef"
 [pkg.ahaha.target.lol]
 available = true
 "#;
@@ -179,6 +185,9 @@ available = true
     #[test]
     fn check_rename() {
         let data = r#"date = "2018-09-03"
+[pkg.ahaha]
+version = "0.0.0"
+git_commit_hash = "0123456789abcdef"
 [pkg.ahaha.target.lol]
 available = true
 [renames.kek]
