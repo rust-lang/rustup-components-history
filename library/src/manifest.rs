@@ -37,6 +37,10 @@ pub struct Rename {
 /// Package info.
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct PackageTargets {
+    /// The package version
+    pub version: String,
+    /// The commit hash of the package
+    pub git_commit_hash: String,
     /// Maps targets onto package availability info.
     #[serde(rename = "target")]
     pub targets: HashMap<String, PackageInfo>,
