@@ -40,6 +40,7 @@ pub struct PackageTargets {
     /// The package version. May be empty if the package is not available.
     pub version: String,
     /// The commit hash of the package. May be `None` if the package is not available.
+    #[serde(default)]
     pub git_commit_hash: Option<String>,
     /// Maps targets onto package availability info.
     #[serde(rename = "target")]
@@ -122,7 +123,9 @@ to = "rustfmt-preview"
                     "cargo".to_string(),
                     PackageTargets {
                         version: "0.89.0-nightly (7918c7eb5 2025-04-27)".to_string(),
-                        git_commit_hash: "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        git_commit_hash: Some(
+                            "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        ),
                         targets: vec![
                             (
                                 "aarch64-unknown-linux-gnu".to_string(),
@@ -145,7 +148,9 @@ to = "rustfmt-preview"
                     "rustfmt-preview".to_string(),
                     PackageTargets {
                         version: "1.8.0-nightly".to_string(),
-                        git_commit_hash: "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        git_commit_hash: Some(
+                            "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        ),
                         targets: vec![
                             (
                                 "aarch64-unknown-linux-gnu".to_string(),
@@ -207,7 +212,7 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
                 "rust-src".to_string(),
                 PackageTargets {
                     version: "1.88.0-nightly (e9f8103f9 2025-05-07)".to_string(),
-                    git_commit_hash: "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                    git_commit_hash: Some("e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string()),
                     targets: vec![("*".to_string(), PackageInfo { available: true })]
                         .into_iter()
                         .collect(),
