@@ -37,6 +37,11 @@ pub struct Rename {
 /// Package info.
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct PackageTargets {
+    /// The package version. May be empty if the package is not available.
+    pub version: String,
+    /// The commit hash of the package. May be `None` if the package is not available.
+    #[serde(default)]
+    pub git_commit_hash: Option<String>,
     /// Maps targets onto package availability info.
     #[serde(rename = "target")]
     pub targets: HashMap<String, PackageInfo>,
@@ -79,6 +84,9 @@ mod tests {
     #[test]
     fn check() {
         let data = r#"date = "2018-09-03"
+[pkg.cargo]
+version = "0.89.0-nightly (7918c7eb5 2025-04-27)"
+git_commit_hash = "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d"
 [pkg.cargo.target.aarch64-unknown-linux-gnu]
 available = true
 
@@ -87,6 +95,10 @@ available = true
 
 [pkg.cargo.target.arm-unknown-linux-gnueabihf]
 available = false
+
+[pkg.rustfmt-preview]
+version = "1.8.0-nightly"
+git_commit_hash = "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d"
 
 [pkg.rustfmt-preview.target.aarch64-unknown-linux-gnu]
 available = true
@@ -110,6 +122,10 @@ to = "rustfmt-preview"
                 (
                     "cargo".to_string(),
                     PackageTargets {
+                        version: "0.89.0-nightly (7918c7eb5 2025-04-27)".to_string(),
+                        git_commit_hash: Some(
+                            "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        ),
                         targets: vec![
                             (
                                 "aarch64-unknown-linux-gnu".to_string(),
@@ -131,6 +147,10 @@ to = "rustfmt-preview"
                 (
                     "rustfmt-preview".to_string(),
                     PackageTargets {
+                        version: "1.8.0-nightly".to_string(),
+                        git_commit_hash: Some(
+                            "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string(),
+                        ),
                         targets: vec![
                             (
                                 "aarch64-unknown-linux-gnu".to_string(),
@@ -175,6 +195,9 @@ to = "rustfmt-preview"
     #[test]
     fn check_wildcard() {
         let data = r#"date = "2018-09-03"
+[pkg.rust-src]
+version = "1.88.0-nightly (e9f8103f9 2025-05-07)"
+git_commit_hash = "e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d"
 [pkg.rust-src.target."*"]
 available = true
 url = "https://static.rust-lang.org/dist/2018-09-03/rust-src-nightly.tar.gz"
@@ -188,6 +211,8 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
             packages: vec![(
                 "rust-src".to_string(),
                 PackageTargets {
+                    version: "1.88.0-nightly (e9f8103f9 2025-05-07)".to_string(),
+                    git_commit_hash: Some("e9f8103f93f8ce2fa2c15c0c6796ec821f8ae15d".to_string()),
                     targets: vec![("*".to_string(), PackageInfo { available: true })]
                         .into_iter()
                         .collect(),
@@ -206,6 +231,7 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
 date = "2018-09-03"
 [pkg.cargo]
 version = "0.30.0-nightly (0ec7281b9 2018-08-20)"
+git_commit_hash = "0ec7281b9c3f8e2fa2c15c0c6796ec821f8ae15d"
 [pkg.cargo.target.aarch64-unknown-linux-gnu]
 available = true
 url = "https://static.rust-lang.org/dist/2018-09-04/cargo-nightly-aarch64-unknown-linux-gnu.tar.gz"
@@ -229,6 +255,7 @@ xz_hash = "ca0e68e7e9827ba6221a40bb17170e8dc6271a9f6991ee5030dcf6acb1a1d8c8"
 
 [pkg.rustfmt-preview]
 version = "0.99.2-nightly (5c9a2b6c1 2018-08-07)"
+git_commit_hash = "0ec7281b9c3f8e2fa2c15c0c6796ec821f8ae15d"
 [pkg.rustfmt-preview.target.aarch64-unknown-linux-gnu]
 available = true
 url = "https://static.rust-lang.org/dist/2018-09-03/rustfmt-nightly-aarch64-unknown-linux-gnu.tar.gz"
