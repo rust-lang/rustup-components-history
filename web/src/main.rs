@@ -1,16 +1,16 @@
 use std::{
     collections::HashMap,
     fmt::Display,
-    fs::{create_dir_all, File},
+    fs::{File, create_dir_all},
     io::{self, Write},
     path::{Path, PathBuf},
 };
 
 use anyhow::Context;
 use chrono::{NaiveDate, Utc};
-use handlebars::{handlebars_helper, Handlebars};
+use handlebars::{Handlebars, handlebars_helper};
 use opts::Config;
-use rustup_available_packages::{cache::FsCache, table::Table, AvailabilityData, Downloader};
+use rustup_available_packages::{AvailabilityData, Downloader, cache::FsCache, table::Table};
 use serde::Serialize;
 use structopt::StructOpt;
 use tiers_table::TiersTable;

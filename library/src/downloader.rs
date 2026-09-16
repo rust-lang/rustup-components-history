@@ -1,9 +1,9 @@
 use super::skip_errors::SkipMissingExt;
 use crate::{
+    Error,
     cache::FsCache,
     manifest::Manifest,
     source::{DefaultSource, SourceInfo},
-    Error,
 };
 use chrono::{Duration, NaiveDate};
 use std::{io, iter};

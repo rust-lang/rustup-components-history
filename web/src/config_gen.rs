@@ -87,32 +87,26 @@ fn collect_targets_for_tier(html: &VDom, tier: Tier) -> anyhow::Result<Vec<Strin
     // Now find the next .table-wrapper, and its table, and that table's tbody
     let tbody = iter
         .find_map(|node| {
-            if node.as_tag()?.attributes().class()? == "table-wrapper" {
-                let Some(table) = node.find_node(html.parser(), &mut |node| {
+            if node.as_tag()?.attributes().class()? != "table-wrapper" {
+                return None;
+            }
+            let Some(table) = node.find_node(html.parser(), &mut |node| {
+                let Some(tag) = node.as_tag() else {
+                    return false;
+                };
+                tag.name() == "table"
+            }) else {
+                return None;
+            };
+            table
+                .get(html.parser())
+                .unwrap()
+                .find_node(html.parser(), &mut |node| {
                     let Some(tag) = node.as_tag() else {
                         return false;
                     };
-                    tag.name() == "table"
-                }) else {
-                    return None;
-                };
-                let Some(tbody) =
-                    table
-                        .get(html.parser())
-                        .unwrap()
-                        .find_node(html.parser(), &mut |node| {
-                            let Some(tag) = node.as_tag() else {
-                                return false;
-                            };
-                            tag.name() == "tbody"
-                        })
-                else {
-                    return None;
-                };
-                Some(tbody)
-            } else {
-                None
-            }
+                    tag.name() == "tbody"
+                })
         })
         .context("Table not found")?;
 
