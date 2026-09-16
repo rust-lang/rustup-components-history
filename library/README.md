@@ -1,6 +1,6 @@
 # rustup-available-packages
 
-[![Travis CI badge](https://api.travis-ci.com/rust-lang/rustup-components-history.svg?branch=master)](https://travis-ci.com/github/rust-lang/rustup-components-history)
+[![Travis CI badge](https://api.travis-ci.com/rust-lang/rustup-components-history.svg?branch=main)](https://travis-ci.com/github/rust-lang/rustup-components-history)
 [![crates.io](https://img.shields.io/crates/v/rustup-available-packages.svg)](https://crates.io/crates/rustup-available-packages)
 [![docs.rs](https://docs.rs/rustup-available-packages/badge.svg)](https://docs.rs/rustup-available-packages)
 
