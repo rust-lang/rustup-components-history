@@ -1,6 +1,6 @@
 //! Cache downloaded manifests.
 
-use crate::{manifest::Manifest, Error};
+use crate::{Error, manifest::Manifest};
 use chrono::NaiveDate;
 use std::{
     fs,
