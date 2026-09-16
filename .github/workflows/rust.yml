@@ -2,7 +2,7 @@ name: Rust
 
 on:
   workflow_dispatch:
-  push: 
+  push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
@@ -15,26 +15,37 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Prepare pages
-      run: ./prepare-pages.sh
-    - name: Deploy GitHub Pages
-      if: ${{ github.event_name != 'pull_request' }}
-      run: |
-        git worktree add gh-pages gh-pages
-        git config user.name "Deploy from CI"
-        git config user.email ""
-        cd gh-pages
-        # Delete the ref to avoid keeping history.
-        git update-ref -d refs/heads/gh-pages
-        rm -rf *
-        mv ../output/* .
-        git add .
-        git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git push --force
+      - uses: actions/checkout@v7
+
+      - name: Update Rust
+        run: rustup update stable
+
+      - name: Build
+        run: cargo build --all --locked
+
+      - name: Test
+        run: cargo test --all
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Prepare pages
+        run: ./prepare-pages.sh
+
+      - name: Deploy GitHub Pages
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          git worktree add gh-pages gh-pages
+          git config user.name "Deploy from CI"
+          git config user.email ""
+          cd gh-pages
+          # Delete the ref to avoid keeping history.
+          git update-ref -d refs/heads/gh-pages
+          rm -rf *
+          mv ../output/* .
+          git add .
+          git commit -m "Deploy $GITHUB_SHA to gh-pages"
+          git push --force

@@ -3,12 +3,6 @@
 # Fail on errors
 set -e -u
 
-# Build the project
-cargo build --verbose --all
-
-# Test everything
-cargo test --verbose --all
-
 # Generate the pages
 mkdir -p output
 cargo run --release --bin=rustup-available-packages-web -- print_config -c config.yaml
