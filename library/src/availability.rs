@@ -158,19 +158,27 @@ available = true
         assert!(all_targets.contains("lol"));
 
         let package_exists = availability
-            .get_availability_row("*", "rust-src", vec![NaiveDate::from_ymd(2018, 9, 3)])
+            .get_availability_row(
+                "*",
+                "rust-src",
+                vec![NaiveDate::from_ymd_opt(2018, 9, 3).unwrap()],
+            )
             .unwrap();
         assert_eq!("rust-src", package_exists.package_name);
         assert_eq!(vec!(true), package_exists.availability_list);
         let package_exists = availability.get_availability_row(
             "lol",
             "rust-src",
-            vec![NaiveDate::from_ymd(2018, 9, 3)],
+            vec![NaiveDate::from_ymd_opt(2018, 9, 3).unwrap()],
         );
         // rust-src is not present in lol target
         assert!(package_exists.is_none());
         let package_exists = availability
-            .get_availability_row("lol", "ahaha", vec![NaiveDate::from_ymd(2018, 9, 3)])
+            .get_availability_row(
+                "lol",
+                "ahaha",
+                vec![NaiveDate::from_ymd_opt(2018, 9, 3).unwrap()],
+            )
             .unwrap();
         assert_eq!("ahaha", package_exists.package_name);
         assert_eq!(vec!(true), package_exists.availability_list);

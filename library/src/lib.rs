@@ -18,7 +18,6 @@ pub mod manifest;
 mod skip_errors;
 mod source;
 pub mod table;
-mod types;
 
 pub use availability::AvailabilityData;
 pub use downloader::Downloader;

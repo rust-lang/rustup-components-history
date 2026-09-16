@@ -105,7 +105,7 @@ to = "rustfmt-preview"
 "#;
         let parsed_manifest: Manifest = toml::from_str(data).unwrap();
         let reference_manifest = Manifest {
-            date: NaiveDate::from_ymd(2018, 9, 3),
+            date: NaiveDate::from_ymd_opt(2018, 9, 3).unwrap(),
             packages: vec![
                 (
                     "cargo".to_string(),
@@ -184,7 +184,7 @@ xz_hash = "dbb913da0a207ae80c53bc6a42074b637920c2a80121420416579fed3e7f2499"
 "#;
         let parsed_manifest: Manifest = toml::from_str(data).unwrap();
         let reference_manifest = Manifest {
-            date: NaiveDate::from_ymd(2018, 9, 3),
+            date: NaiveDate::from_ymd_opt(2018, 9, 3).unwrap(),
             packages: vec![(
                 "rust-src".to_string(),
                 PackageTargets {
