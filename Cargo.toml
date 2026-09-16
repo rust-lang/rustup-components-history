@@ -3,3 +3,4 @@ members = [
     "library",
     "web",
 ]
+resolver = "3"
