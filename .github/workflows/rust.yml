@@ -3,9 +3,9 @@ name: Rust
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   schedule:
     # Runs at 2:00 UTC every day (to give the release process 2h to complete).
     - cron: '0 2 * * *'
