@@ -16,6 +16,9 @@ pub enum Tier {
     /// Tier 1 platforms.
     #[serde(rename = "Tier 1")]
     Tier1,
+    /// Tier 1.5 platforms.
+    #[serde(rename = "Tier 1.5")]
+    Tier15,
     /// Tier 2 platforms.
     #[serde(rename = "Tier 2")]
     Tier2,
