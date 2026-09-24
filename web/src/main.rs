@@ -103,6 +103,7 @@ fn generate_html(
             .with_context(|| format!("Can't create file [{}]", output_path))?;
 
         let table = Table::builder(&data, target)
+            .first_cell(&"Last available")
             .dates(dates)
             .additional(&additional)
             .build();
